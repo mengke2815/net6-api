@@ -1,7 +1,7 @@
-# NET6项目尝鲜
+﻿# NET6项目尝鲜
 
 #### Description
-.NET6项目尝鲜
+.基于NET6的WebApi尝鲜项目，麻雀虽小，五脏俱全。
 
 #### Software Architecture
 Software architecture description
