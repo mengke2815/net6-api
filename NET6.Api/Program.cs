@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NET6.Api.Service;
+using NET6.Infrastructure.Tools;
 using Serilog;
 using SqlSugar;
 using System.Reflection;
@@ -15,26 +16,28 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
-//引入配置
+//引入配置文件
 var _config = new ConfigurationBuilder()
                  .SetBasePath(basePath)
                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                  .Build();
 
-//注入数据库和redis
+#region 注入数据库和redis
 builder.Services.AddScoped(options =>
 {
     return new SqlSugarClient(new ConnectionConfig()
     {
         ConnectionString = _config.GetConnectionString("SugarConnectString"),
-        DbType = DbType.SqlServer,
+        DbType = DbType.MySql,
         IsAutoCloseConnection = true,
         InitKeyType = InitKeyType.Attribute
     });
 });
 RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
+#endregion
 
 
+#region 添加swagger注释
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -42,8 +45,10 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Title = "Api"
     });
-    var xmlPath = Path.Combine(basePath, "NET6.xml");
+    var xmlPath = Path.Combine(basePath, "NET6.Api.xml");
     c.IncludeXmlComments(xmlPath, true);
+    var xmlDomainPath = Path.Combine(basePath, "NET6.Domain.xml");
+    c.IncludeXmlComments(xmlDomainPath, true);
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Value: Bearer {token}",
@@ -55,31 +60,35 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
       {
-       new OpenApiSecurityScheme
+        new OpenApiSecurityScheme
+        {
+          Reference = new OpenApiReference
           {
-            Reference = new OpenApiReference
-            {
-                 Type = ReferenceType.SecurityScheme,
-                 Id = "Bearer"
-            },Scheme = "oauth2",Name = "Bearer",In = ParameterLocation.Header,},new List<string>()}
-          });
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"
+          },Scheme = "oauth2",Name = "Bearer",In = ParameterLocation.Header,
+        },new List<string>()
+      }
+    });
 });
+#endregion
 
 
+#region 添加校验
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-             {
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateIssuer = true,
-                     ValidateAudience = true,
-                     ValidateLifetime = true,
-                     ValidateIssuerSigningKey = true,
-                     ValidAudience = "net6.com",
-                     ValidIssuer = "net6.com",
-                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"])),
-                 };
-             });
-
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidAudience = "net6api.com",
+        ValidIssuer = "net6api.com",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"])),
+    };
+});
+#endregion
 
 Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Error()
@@ -89,57 +98,8 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true)
                 .Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
 
-//注入服务
-builder.Services.AddHostedService<TimerServicce>();
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-var app = builder.Build();
-
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-}
-
-//app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(basePath, "Files/")),
-    RequestPath = "/Files"
-});
-
-
-app.UseCors(builder => builder
-               //.WithOrigins(Configuration["Origins"])
-               //.AllowCredentials()
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
-
-
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-
-
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
-    c.RoutePrefix = string.Empty;
-    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-    c.DefaultModelsExpandDepth(-1);
-});
-
-
-//引入autofac
+#region 引入注册Autofac
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-//注册Autofac
 var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
     try
@@ -152,6 +112,62 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
         throw new Exception(ex.Message + "\n" + ex.InnerException);
     }
 });
+#endregion
+
+//注入服务
+builder.Services.AddHostedService<TimerServicce>();
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+}
+
+#region 启用静态资源访问
+//创建目录
+CommonFun.CreateDir(Path.Combine(basePath, "Files/"));
+//app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(basePath, "Files/")),
+    RequestPath = "/Files"
+});
+#endregion
+
+
+#region 启用跨域访问
+app.UseCors(builder => builder
+       //.WithOrigins(Configuration["Origins"])
+       //.AllowCredentials()
+       .AllowAnyOrigin()
+       .AllowAnyMethod()
+       .AllowAnyHeader());
+#endregion
+
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+
+#region 启用swaggerUI
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+    c.RoutePrefix = string.Empty;
+    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+    c.DefaultModelsExpandDepth(-1);
+});
+
+#endregion
+
 
 app.MapControllerRoute(
     name: "default",

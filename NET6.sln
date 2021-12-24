@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET6.Api", "NET6.Api\NET6.Api.csproj", "{B3320050-43AB-4DA9-979F-9F2F2124EC39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET6.Domain", "NET6.Domain\NET6.Domain.csproj", "{DD48E42D-1F4E-4224-A64D-0EDCB0BD8565}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET6.Domain", "NET6.Domain\NET6.Domain.csproj", "{DD48E42D-1F4E-4224-A64D-0EDCB0BD8565}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET6.Infrastructure", "NET6.Infrastructure\NET6.Infrastructure.csproj", "{4D3C92BA-D5DF-4653-9109-A4D359EACAED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET6.Infrastructure", "NET6.Infrastructure\NET6.Infrastructure.csproj", "{4D3C92BA-D5DF-4653-9109-A4D359EACAED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
