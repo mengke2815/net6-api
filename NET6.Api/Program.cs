@@ -142,9 +142,8 @@ app.UseStaticFiles(new StaticFileOptions
 
 #region ÆôÓÃ¿çÓò·ÃÎÊ
 app.UseCors(builder => builder
-       //.WithOrigins(Configuration["Origins"])
-       //.AllowCredentials()
-       .AllowAnyOrigin()
+       .WithOrigins(_config["Origins"])
+       .AllowCredentials()
        .AllowAnyMethod()
        .AllowAnyHeader());
 #endregion

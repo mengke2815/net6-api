@@ -1,7 +1,11 @@
-﻿namespace NET6.Domain.Dtos
+﻿namespace NET6.Domain.ViewModels
 {
-    public class AddressDto
+    public class AddressView
     {
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Id { get; set; }
         /// <summary>
         /// 收件人姓名
         /// </summary>

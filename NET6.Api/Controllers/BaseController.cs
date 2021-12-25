@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NET6.Domain.ViewModels;
+using Serilog;
 
 namespace NET6.Api.Controllers
 {
@@ -10,6 +11,10 @@ namespace NET6.Api.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
+        protected void Logs(string str)
+        {
+            Log.Error(str);
+        }
         protected virtual JsonView JsonView(object obj)
         {
             return new JsonView { Code = StatusCodes.Status200OK, Msg = "操作成功", Data = obj };
