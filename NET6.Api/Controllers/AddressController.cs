@@ -39,7 +39,7 @@ namespace NET6.Api.Controllers
         /// </summary>
         /// <param name="Id">编号</param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         [ProducesResponseType(typeof(AddressView), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAsync(string Id)
         {
@@ -91,7 +91,8 @@ namespace NET6.Api.Controllers
                     IsDefault = dto.IsDefault
                 });
                 _addressRep.CommitTran();
-                return Ok(JsonView(true));
+                if (result > 0) return Ok(JsonView(true));
+                return Ok(JsonView(false));
             }
             catch (Exception e)
             {
@@ -107,7 +108,7 @@ namespace NET6.Api.Controllers
         /// <param name="Id">编号</param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut("{Id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> EditAsync(string Id, AddressDto dto)
         {
@@ -127,7 +128,8 @@ namespace NET6.Api.Controllers
                     IsDefault = dto.IsDefault
                 });
                 _addressRep.CommitTran();
-                return Ok(JsonView(true));
+                if (result) return Ok(JsonView(true));
+                return Ok(JsonView(false));
             }
             catch (Exception e)
             {
@@ -142,7 +144,7 @@ namespace NET6.Api.Controllers
         /// </summary>
         /// <param name="Id">编号</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("{Id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteAsync(string Id)
         {
@@ -150,9 +152,10 @@ namespace NET6.Api.Controllers
             {
                 //开启事务操作资源
                 _addressRep.BeginTran();
-                await _addressRep.DeleteAsync(a => a.Id == Id);
+                var result = await _addressRep.DeleteAsync(a => a.Id == Id);
                 _addressRep.CommitTran();
-                return Ok(JsonView(true));
+                if (result) return Ok(JsonView(true));
+                return Ok(JsonView(false));
             }
             catch (Exception e)
             {
