@@ -106,7 +106,7 @@ namespace NET6.Infrastructure.Repositories
             var result = await _sqlSugar.Updateable<TEntity>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
             return result > 0;
         }
-        public async Task<bool> SoftDeleteAsync(string id)
+        public virtual async Task<bool> SoftDeleteAsync(string id)
         {
             var result = await _sqlSugar.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
             {
@@ -161,7 +161,7 @@ namespace NET6.Infrastructure.Repositories
             var result = await _sqlSugar.Deleteable<T>().Where(wherexp).ExecuteCommandAsync();
             return result > 0;
         }
-        public async Task<bool> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
+        public virtual async Task<bool> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
         {
             var result = await _sqlSugar.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
             {

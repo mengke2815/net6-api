@@ -28,8 +28,7 @@ namespace NET6.Api.Controllers
         [ProducesResponseType(typeof(AddressView), StatusCodes.Status200OK)]
         public async Task<IActionResult> DefaultAsync()
         {
-            var userid = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var model = await _addressRep.GetDtoAsync(a => !a.IsDeleted && a.IsDefault && a.UserId == userid);
+            var model = await _addressRep.GetDtoAsync(a => !a.IsDeleted && a.IsDefault && a.UserId == CurrentUserId);
             if (model == null) return Ok(JsonView("未找到默认地址"));
             return Ok(JsonView(model));
         }
@@ -58,7 +57,6 @@ namespace NET6.Api.Controllers
         [ProducesResponseType(typeof(List<AddressView>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ListAsync(int page = 1, int size = 15)
         {
-            var userid = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var query = _addressRep.QueryDto(a => !a.IsDeleted);
             RefAsync<int> count = 0;
             var list = await query.OrderBy(a => a.IsDefault).ToPageListAsync(page, size, count);
@@ -76,12 +74,11 @@ namespace NET6.Api.Controllers
         {
             try
             {
-                var userid = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 //开启事务
                 _addressRep.BeginTran();
                 var result = await _addressRep.AddAsync(new Address
                 {
-                    UserId = userid,
+                    UserId = CurrentUserId,
                     Name = dto.Name,
                     Phone = dto.Phone,
                     Province = dto.Province,
@@ -114,7 +111,6 @@ namespace NET6.Api.Controllers
         {
             try
             {
-                var userid = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 //开启事务
                 _addressRep.BeginTran();
                 var result = await _addressRep.UpdateAsync(a => a.Id == Id, a => new Address

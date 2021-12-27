@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NET6.Domain.ViewModels;
 using Serilog;
+using System.Security.Claims;
 
 namespace NET6.Api.Controllers
 {
@@ -11,7 +12,8 @@ namespace NET6.Api.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        protected void Logs(string str)
+        protected virtual string? CurrentUserId => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        protected virtual void Logs(string str)
         {
             Log.Error(str);
         }
@@ -37,7 +39,6 @@ namespace NET6.Api.Controllers
             {
                 return new JsonView { Code = StatusCodes.Status400BadRequest, Msg = "操作失败" };
             }
-
         }
         protected virtual JsonView JsonView(bool s, string msg)
         {
