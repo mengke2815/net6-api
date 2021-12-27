@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using CSRedis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -35,7 +36,6 @@ builder.Services.AddScoped(options =>
 });
 RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
 #endregion
-
 
 #region 添加swagger注释
 builder.Services.AddSwaggerGen(c =>
@@ -73,7 +73,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 #endregion
 
-
 #region 添加校验
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -90,13 +89,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 #endregion
 
+#region 初始化日志
 Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Error()
-               .WriteTo.File(Path.Combine("Logs", @"Log.txt"), rollingInterval: RollingInterval.Day)
-               .CreateLogger();
+       .MinimumLevel.Error()
+       .WriteTo.File(Path.Combine("Logs", @"Log.txt"), rollingInterval: RollingInterval.Day)
+       .CreateLogger();
+#endregion
 
+#region 允许服务器同步IO
 builder.Services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true)
-                .Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
+        .Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
+#endregion
 
 #region 引入注册Autofac
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -114,8 +117,9 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 });
 #endregion
 
-//注入服务
+#region 注入后台服务
 builder.Services.AddHostedService<TimerServicce>();
+#endregion
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -130,15 +134,20 @@ if (!app.Environment.IsDevelopment())
 
 #region 启用静态资源访问
 //创建目录
-CommonFun.CreateDir(Path.Combine(basePath, "Files/"));
-//app.UseStaticFiles();
+var path = Path.Combine(basePath, "Files/");
+CommonFun.CreateDir(path);
+//MIME支持
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings[".fbx"] = "application/octet-stream";
+provider.Mappings[".obj"] = "application/octet-stream";
+provider.Mappings[".mtl"] = "application/octet-stream";
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(basePath, "Files/")),
+    FileProvider = new PhysicalFileProvider(path),
+    ContentTypeProvider = provider,
     RequestPath = "/Files"
 });
 #endregion
-
 
 #region 启用跨域访问
 app.UseCors(builder => builder
@@ -148,12 +157,9 @@ app.UseCors(builder => builder
        .AllowAnyHeader());
 #endregion
 
-
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 #region 启用swaggerUI
 app.UseSwagger();
@@ -166,7 +172,6 @@ app.UseSwaggerUI(c =>
 });
 
 #endregion
-
 
 app.MapControllerRoute(
     name: "default",

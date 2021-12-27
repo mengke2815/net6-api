@@ -13,7 +13,7 @@ namespace EntitySync
         /// </summary>
         public static void SyncStructure(SqlSugarClient db)
         {
-            #region MyRegion
+            #region Aop
             //db.Aop.OnLogExecuting = (sql, pars) =>
             //{
             //    Console.WriteLine(sql + "" + Db.Utilities.SerializeObject
@@ -22,7 +22,7 @@ namespace EntitySync
             //}; 
             #endregion
 
-            #region MyRegion
+            #region 对话框
             Console.WriteLine("是否确定同步数据库表结构？(同名数据表将会被备份，生产环境慎用，回车确认)");
             var str = Console.ReadKey();
             if (str.Key == ConsoleKey.Enter)
