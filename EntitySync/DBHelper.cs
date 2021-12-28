@@ -9,9 +9,9 @@ namespace EntitySync
     public class DBHelper
     {
         /// <summary>
-        /// 同步结构
+        /// 同步数据库结构
         /// </summary>
-        public static void SyncStructure(SqlSugarClient db)
+        public static void SyncEntity(SqlSugarClient db)
         {
             #region Aop
             //db.Aop.OnLogExecuting = (sql, pars) =>

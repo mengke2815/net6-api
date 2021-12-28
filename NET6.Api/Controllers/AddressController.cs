@@ -4,7 +4,6 @@ using NET6.Domain.Entities;
 using NET6.Domain.ViewModels;
 using NET6.Infrastructure.Repositories;
 using SqlSugar;
-using System.Security.Claims;
 
 namespace NET6.Api.Controllers
 {

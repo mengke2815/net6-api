@@ -16,6 +16,11 @@ namespace NET6.Infrastructure.Tools
         {
             return !string.IsNullOrWhiteSpace(s);
         }
+        public static int GetRandom(int minNum, int maxNum)
+        {
+            var seed = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0);
+            return new Random(seed).Next(minNum, maxNum);
+        }
         public static object? GetDefaultVal(string typename)
         {
             return typename switch

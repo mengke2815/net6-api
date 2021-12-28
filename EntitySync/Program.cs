@@ -9,5 +9,5 @@ var db = new SqlSugarClient(new ConnectionConfig()
     IsAutoCloseConnection = true,
     InitKeyType = InitKeyType.Attribute
 });
-DBHelper.SyncStructure(db);
+DBHelper.SyncEntity(db);
 
