@@ -9,12 +9,12 @@ namespace NET6.Api.Controllers
     [Route("upload")]
     public class UploadController : BaseController
     {
-        readonly IConfiguration _configuration;
-        readonly IWebHostEnvironment _hostingEnvironment;
-        public UploadController(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
+        readonly IConfiguration _config;
+        readonly IWebHostEnvironment _env;
+        public UploadController(IConfiguration config, IWebHostEnvironment env)
         {
-            _configuration = configuration;
-            _hostingEnvironment = hostingEnvironment;
+            _config = config;
+            _env = env;
         }
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace NET6.Api.Controllers
         public async Task<IActionResult> FileUpload(string path = "default")
         {
             var files = Request.Form.Files;
-            if (files.Count == 0) return Ok(JsonView("请选择上传文件"));
+            if (files.Count == 0) return Ok(JsonView("请选择文件"));
 
-            var domain = _configuration["Domain"];
+            var domain = _config["Domain"];
             var dircstr = $"/Files/{path}/{DateTime.Now:yyyyMMdd}/";
             var result = new List<string>();
             foreach (var file in files)
@@ -37,10 +37,9 @@ namespace NET6.Api.Controllers
                 if (filename.IsNull()) continue;
 
                 var fileext = Path.GetExtension(filename).ToLower();
-                var folderpath = _hostingEnvironment.ContentRootPath;
+                var folderpath = _env.ContentRootPath;
                 CommonFun.CreateDir(folderpath + dircstr);
                 //重新命名文件
-                var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
                 var pre = DateTime.Now.ToString("yyyyMMddHHmmssffff");
                 var after = CommonFun.GetRandom(1000, 9999).ToString();
 
