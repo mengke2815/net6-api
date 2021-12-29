@@ -1,4 +1,5 @@
 ﻿using NET6.Domain.Entities;
+using NET6.Domain.Enums;
 using NET6.Infrastructure.Tools;
 using SqlSugar;
 using System.Data;
@@ -13,6 +14,17 @@ namespace NET6.Infrastructure.Repositories
         {
             _sqlSugar = sqlSugar;
         }
+
+        #region 多租户
+        /// <summary>
+        /// 变更数据库
+        /// </summary>
+        /// <param name="db"></param>
+        public void ChangeDataBase(DBEnum db)
+        {
+            _sqlSugar.ChangeDatabase(db);
+        }
+        #endregion
 
         #region 原生Sql
         public virtual Task<int> ExecuteCommandAsync(string sql)

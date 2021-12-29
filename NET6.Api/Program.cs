@@ -8,6 +8,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NET6.Api.Service;
+using NET6.Domain.Enums;
 using NET6.Infrastructure.Tools;
 using Serilog;
 using SqlSugar;
@@ -23,15 +24,12 @@ var _config = new ConfigurationBuilder()
                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                  .Build();
 
-#region 注入数据库和redis
+#region 注入数据库和Redis
 builder.Services.AddScoped(options =>
 {
-    return new SqlSugarClient(new ConnectionConfig()
+    return new SqlSugarClient(new List<ConnectionConfig>()
     {
-        ConnectionString = _config.GetConnectionString("SugarConnectString"),
-        DbType = DbType.MySql,
-        IsAutoCloseConnection = true,
-        InitKeyType = InitKeyType.Attribute
+        new ConnectionConfig() { ConfigId = DBEnum.默认数据库, ConnectionString = _config.GetConnectionString("SugarConnectString"), DbType = DbType.MySql, IsAutoCloseConnection = true }
     });
 });
 RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
