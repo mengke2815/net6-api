@@ -134,11 +134,13 @@ if (!app.Environment.IsDevelopment())
 //创建目录
 var path = Path.Combine(basePath, "Files/");
 CommonFun.CreateDir(path);
-//MIME支持
-var provider = new FileExtensionContentTypeProvider();
-provider.Mappings[".fbx"] = "application/octet-stream";
-provider.Mappings[".obj"] = "application/octet-stream";
-provider.Mappings[".mtl"] = "application/octet-stream";
+//添加MIME支持
+var provider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
+{
+    {".fbx", "application/octet-stream"},
+    {".obj", "application/octet-stream"},
+    {".mtl", "application/octet-stream"},
+});
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(path),
