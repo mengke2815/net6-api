@@ -69,13 +69,11 @@ namespace NET6.Infrastructure.Tools
         #region 文件操作
         public static FileInfo[] GetFiles(string directoryPath)
         {
-            //如果目录不存在，则抛出异常
             if (!IsExistDirectory(directoryPath))
             {
                 throw new DirectoryNotFoundException();
             }
             var root = new DirectoryInfo(directoryPath);
-            //获取文件列表
             return root.GetFiles();
         }
         public static bool IsExistDirectory(string directoryPath)
@@ -94,7 +92,6 @@ namespace NET6.Infrastructure.Tools
                 f2.Close();
                 f2.Dispose();
             }
-
             return s;
         }
         public static void FileMove(string OrignFile, string NewFile)

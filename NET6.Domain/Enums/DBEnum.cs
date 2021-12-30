@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NET6.Domain.Enums
+﻿namespace NET6.Domain.Enums
 {
     /// <summary>
     /// 多租户数据库

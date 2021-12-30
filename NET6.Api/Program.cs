@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using NET6.Api.Service;
+using NET6.Api.Services;
 using NET6.Domain.Enums;
 using NET6.Infrastructure.Tools;
 using Serilog;
@@ -116,7 +116,7 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 #endregion
 
 #region 注入后台服务
-builder.Services.AddHostedService<TimerServicce>();
+builder.Services.AddHostedService<TimerService>();
 #endregion
 
 // Add services to the container.

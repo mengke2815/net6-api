@@ -1,11 +1,11 @@
 ﻿using Serilog;
 
-namespace NET6.Api.Service
+namespace NET6.Api.Services
 {
     /// <summary>
     /// 后台任务
     /// </summary>
-    public class TimerServicce : BackgroundService
+    public class TimerService : BackgroundService
     {
         /// <summary>
         /// 执行主方法
