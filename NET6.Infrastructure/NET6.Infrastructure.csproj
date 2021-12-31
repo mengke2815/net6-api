@@ -15,6 +15,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="EPPlus" Version="5.8.4" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\NET6.Domain\NET6.Domain.csproj" />
 	</ItemGroup>
 
