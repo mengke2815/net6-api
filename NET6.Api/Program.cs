@@ -24,7 +24,7 @@ var _config = new ConfigurationBuilder()
                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                  .Build();
 
-#region 注入数据库和Redis
+#region 注入数据库
 builder.Services.AddScoped(options =>
 {
     return new SqlSugarClient(new List<ConnectionConfig>()
@@ -32,6 +32,9 @@ builder.Services.AddScoped(options =>
         new ConnectionConfig() { ConfigId = DBEnum.默认数据库, ConnectionString = _config.GetConnectionString("SugarConnectString"), DbType = DbType.MySql, IsAutoCloseConnection = true }
     });
 });
+#endregion
+
+#region 初始化Redis
 RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
 #endregion
 
@@ -71,7 +74,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 #endregion
 
-#region 添加校验
+#region 添加身份验证
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -99,7 +102,7 @@ builder.Services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = tru
         .Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
 #endregion
 
-#region 引入注册Autofac
+#region 初始化Autofac，注册程序集
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
