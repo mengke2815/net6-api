@@ -3,6 +3,7 @@ using NET6.Domain.Dtos;
 using NET6.Domain.Entities;
 using NET6.Domain.ViewModels;
 using NET6.Infrastructure.Repositories;
+using NET6.Infrastructure.Tools;
 using SqlSugar;
 
 namespace NET6.Api.Controllers
@@ -158,6 +159,33 @@ namespace NET6.Api.Controllers
                 Logs("删除异常：" + e.Message);
                 return Ok(JsonView("删除异常"));
             }
+        }
+
+        /// <summary>
+        /// 导出
+        /// </summary>
+        /// <param name="page">当前页码</param>
+        /// <param name="size">每页条数</param>
+        /// <returns></returns>
+        [HttpGet("export")]
+        [ProducesResponseType(typeof(List<AddressView>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ExportAsync(int page = 1, int size = 15)
+        {
+            var query = _addressRep.QueryDto(a => !a.IsDeleted);
+            RefAsync<int> count = 0;
+            var list = await query.OrderBy(a => a.IsDefault).ToPageListAsync(page, size, count);
+            var columns = new Dictionary<string, string>
+            {
+                { "Name", "收件人名称" },
+                { "Phone", "收件人电话" },
+                { "Province", "省份" },
+                { "City", "城市" },
+                { "Detail", "详细地址" }
+            };
+            var title = "列表导出(" + DateTime.Now.ToString("yyyyMMddHHmmss") + ")";
+            var outColumn = new List<string>();
+            var fs = ExcelExportImportHelper.GetByteToExportExcel(list, columns, outColumn, "列表导出", title, false);
+            return File(fs, "application/vnd.android.package-archive", title + ".xlsx");
         }
     }
 }
