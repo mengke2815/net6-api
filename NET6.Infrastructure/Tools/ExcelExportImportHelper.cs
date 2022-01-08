@@ -86,7 +86,7 @@ namespace NET6.Infrastructure.Tools
             var myType = typeof(T);
             var myPro = new List<PropertyInfo>();
             var i = 1;
-            foreach (string key in columnNames.Keys)
+            foreach (var key in columnNames.Keys)
             {
                 var p = myType.GetProperty(key);
                 myPro.Add(p);
@@ -99,7 +99,7 @@ namespace NET6.Infrastructure.Tools
             foreach (var data in datas)
             {
                 var column = 1;
-                foreach (PropertyInfo p in myPro.Where(info => !outOfColumns.Contains(info.Name)))
+                foreach (var p in myPro.Where(info => !outOfColumns.Contains(info.Name)))
                 {
                     worksheet.Cells[row, column].Value = p == null ? "" : Convert.ToString(p.GetValue(data, null));
                     column++;
