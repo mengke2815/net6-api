@@ -46,10 +46,8 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Title = "Api"
     });
-    var xmlPath = Path.Combine(basePath, "NET6.Api.xml");
-    c.IncludeXmlComments(xmlPath, true);
-    var xmlDomainPath = Path.Combine(basePath, "NET6.Domain.xml");
-    c.IncludeXmlComments(xmlDomainPath, true);
+    c.IncludeXmlComments(Path.Combine(basePath, "NET6.Api.xml"), true);
+    c.IncludeXmlComments(Path.Combine(basePath, "NET6.Domain.xml"), true);
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Value: Bearer {token}",
