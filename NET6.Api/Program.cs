@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using CSRedis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
@@ -34,7 +33,7 @@ builder.Services.AddScoped(options =>
 #endregion
 
 #region 初始化Redis
-RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
+//RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
 #endregion
 
 #region 添加swagger注释
@@ -117,6 +116,10 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 
 #region 注入后台服务
 builder.Services.AddHostedService<TimerService>();
+#endregion
+
+#region 注册系统缓存
+builder.Services.AddMemoryCache();
 #endregion
 
 // Add services to the container.

@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="EPPlus" Version="5.8.4" />
+	  <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
