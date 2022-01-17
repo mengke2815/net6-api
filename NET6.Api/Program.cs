@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NET6.Api.Filters;
 using NET6.Api.Services;
 using NET6.Infrastructure.Tools;
 using Serilog;
@@ -122,8 +123,15 @@ builder.Services.AddHostedService<TimerService>();
 builder.Services.AddMemoryCache();
 #endregion
 
+#region в╒╡Аhttpиообнд
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+#endregion
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<LogActionFilter>();
+});
 
 var app = builder.Build();
 

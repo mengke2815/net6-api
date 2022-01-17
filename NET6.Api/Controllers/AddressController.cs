@@ -148,7 +148,7 @@ namespace NET6.Api.Controllers
             {
                 //开启事务操作资源
                 _addressRep.BeginTran();
-                var result = await _addressRep.DeleteAsync(a => a.Id == Id);
+                var result = await _addressRep.SoftDeleteAsync(a => a.Id == Id);
                 _addressRep.CommitTran();
                 if (result) return Ok(JsonView(true));
                 return Ok(JsonView(false));
