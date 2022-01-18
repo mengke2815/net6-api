@@ -39,7 +39,8 @@ else
 db.DbMaintenance.CreateDatabase();
 db.CodeFirst.SetStringDefaultLength(50).BackupTable().InitTables(new Type[]
 {
-    typeof(OperationLog)
+    typeof(OperationLog),
+    typeof(Address)
 });
 Console.WriteLine("数据库结构同步完成!");
 
