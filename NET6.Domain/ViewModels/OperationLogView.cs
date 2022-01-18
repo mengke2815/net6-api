@@ -53,5 +53,9 @@
         /// 操作结果
         /// </summary>
         public string Result { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 }

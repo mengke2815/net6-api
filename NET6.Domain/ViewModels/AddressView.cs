@@ -37,5 +37,9 @@
         /// 是否是默认地址
         /// </summary>
         public bool IsDefault { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 }
