@@ -41,8 +41,7 @@ namespace NET6.Api.Filters
             var request = _context.HttpContext?.Request;
             var ua = request?.Headers["User-Agent"];
             var client = UAParser.Parser.GetDefault().Parse(ua);
-            var device = client.Device.Family;
-            device = device.ToLower() == "other" ? "" : device;
+            var device = client.Device.Family.ToLower() == "other" ? "" : client.Device.Family;
 
             var log = new OperationLog
             {
