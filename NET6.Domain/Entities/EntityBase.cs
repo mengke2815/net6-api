@@ -35,7 +35,7 @@ namespace NET6.Domain.Entities
         /// <summary>
         /// 删除时间
         /// </summary>
-        [SugarColumn(ColumnDescription = "删除时间")]
-        public DateTime DeleteTime { get; set; }
+        [SugarColumn(ColumnDescription = "删除时间", IsNullable = true)]
+        public DateTime? DeleteTime { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace NET6.Infrastructure.Tools
             var typeFromHandle = typeof(T);
             var properties = typeFromHandle.GetProperties();
             var array = properties;
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 var propertyInfo = array[i];
                 if (propertyInfo.GetValue(model, null) == null)

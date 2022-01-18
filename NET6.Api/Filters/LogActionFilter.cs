@@ -47,8 +47,8 @@ namespace NET6.Api.Filters
             var client = UAParser.Parser.GetDefault().Parse(ua);
             //var device = client.Device.Family.ToLower() == "other" ? "" : client.Device.Family;
 
-            var controller = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerName;
-            var action = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
+            var controller = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerName.ToLower();
+            var action = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName.ToLower();
 
             var log = new OperationLog
             {
