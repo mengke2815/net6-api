@@ -7,6 +7,9 @@ using System.Diagnostics;
 
 namespace NET6.Api.Filters
 {
+    /// <summary>
+    /// 日志过滤器
+    /// </summary>
     public class LogActionFilter : IAsyncActionFilter
     {
         readonly IHttpContextAccessor _context;
