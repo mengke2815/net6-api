@@ -23,6 +23,14 @@ var _config = new ConfigurationBuilder()
                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                  .Build();
 
+#region 接口分组
+var group = new List<Tuple<string, string>>
+{
+    //new Tuple<string, string>("Group1","分组一"),
+    //new Tuple<string, string>("Group2","分组二")
+};
+#endregion
+
 #region 注入数据库
 builder.Services.AddScoped(options =>
 {
@@ -38,16 +46,20 @@ builder.Services.AddScoped(options =>
 #endregion
 
 #region 添加swagger注释
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(a =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
+    a.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
         Title = "Api"
     });
-    c.IncludeXmlComments(Path.Combine(basePath, "NET6.Api.xml"), true);
-    c.IncludeXmlComments(Path.Combine(basePath, "NET6.Domain.xml"), true);
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    foreach (var item in group)
+    {
+        a.SwaggerDoc(item.Item1, new OpenApiInfo { Version = item.Item1, Title = item.Item2, Description = "" });
+    }
+    a.IncludeXmlComments(Path.Combine(basePath, "NET6.Api.xml"), true);
+    a.IncludeXmlComments(Path.Combine(basePath, "NET6.Domain.xml"), true);
+    a.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Value: Bearer {token}",
         Name = "Authorization",
@@ -55,7 +67,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    a.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
       {
         new OpenApiSecurityScheme
@@ -174,12 +186,16 @@ app.UseAuthorization();
 
 #region 启用swaggerUI
 app.UseSwagger();
-app.UseSwaggerUI(c =>
+app.UseSwaggerUI(a =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
-    c.RoutePrefix = string.Empty;
-    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-    c.DefaultModelsExpandDepth(-1);
+    a.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+    foreach (var item in group)
+    {
+        a.SwaggerEndpoint($"/swagger/{item.Item1}/swagger.json", item.Item2);
+    }
+    a.RoutePrefix = string.Empty;
+    a.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+    a.DefaultModelsExpandDepth(-1);//不显示Models
 });
 
 #endregion

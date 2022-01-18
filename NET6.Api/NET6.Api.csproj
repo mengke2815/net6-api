@@ -36,7 +36,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="SqlSugarCore" Version="5.0.4.9" />
+		<PackageReference Include="SqlSugarCore" Version="5.0.5.3" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 		<PackageReference Include="UAParser" Version="3.1.47" />
 	</ItemGroup>
