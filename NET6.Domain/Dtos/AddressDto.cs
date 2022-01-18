@@ -1,5 +1,8 @@
 ﻿namespace NET6.Domain.Dtos
 {
+    /// <summary>
+    /// 地址
+    /// </summary>
     public class AddressDto
     {
         /// <summary>

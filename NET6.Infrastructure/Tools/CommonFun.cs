@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NET6.Infrastructure.Tools
 {
@@ -20,6 +23,10 @@ namespace NET6.Infrastructure.Tools
         {
             var seed = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0);
             return new Random(seed).Next(minNum, maxNum);
+        }
+        public static string ToJson(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
         }
         public static object? GetDefaultVal(string typename)
         {
@@ -103,6 +110,41 @@ namespace NET6.Infrastructure.Tools
             if (dir.Length == 0) return;
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
+        }
+        #endregion
+
+        #region IP
+        /// <summary>
+        /// 是否为ip
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        public static bool IsIP(string ip)
+        {
+            return Regex.IsMatch(ip, @"^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$");
+        }
+        public static string GetIP(HttpRequest request)
+        {
+            if (request == null)
+            {
+                return "";
+            }
+
+            var ip = request.Headers["X-Real-IP"].FirstOrDefault();
+            if (ip.IsNull())
+            {
+                ip = request.Headers["X-Forwarded-For"].FirstOrDefault();
+            }
+            if (ip.IsNull())
+            {
+                ip = request.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+            }
+            if (ip.IsNull() || !IsIP(ip))
+            {
+                ip = "127.0.0.1";
+            }
+
+            return ip;
         }
         #endregion
     }

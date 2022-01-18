@@ -35,7 +35,7 @@ namespace NET6.Api.Controllers
             {
                 Expires = DateTime.Now.AddDays(30)
             };
-            var claims = new[] { new Claim(ClaimTypes.NameIdentifier, "") };
+            var claims = new[] { new Claim(ClaimTypes.NameIdentifier, "admin") };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(

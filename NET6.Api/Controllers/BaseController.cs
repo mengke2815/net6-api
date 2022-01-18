@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NET6.Domain.ViewModels;
 using Serilog;
 using System.Security.Claims;
@@ -8,7 +9,7 @@ namespace NET6.Api.Controllers
     /// <summary>
     /// 控制器基类
     /// </summary>
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class BaseController : ControllerBase
     {

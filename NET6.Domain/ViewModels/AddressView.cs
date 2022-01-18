@@ -1,5 +1,8 @@
 ﻿namespace NET6.Domain.ViewModels
 {
+    /// <summary>
+    /// 地址
+    /// </summary>
     public class AddressView
     {
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿namespace NET6.Domain.Dtos
 {
     /// <summary>
-    /// 用户登录
+    /// 登录信息
     /// </summary>
     public class LoginDto
     {
