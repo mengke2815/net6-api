@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 using NET6.Api.Attributes;
 using NET6.Domain.Entities;
 using NET6.Infrastructure.Repositories;
@@ -44,7 +45,10 @@ namespace NET6.Api.Filters
             var request = _context.HttpContext?.Request;
             var ua = request?.Headers["User-Agent"];
             var client = UAParser.Parser.GetDefault().Parse(ua);
-            var device = client.Device.Family.ToLower() == "other" ? "" : client.Device.Family;
+            //var device = client.Device.Family.ToLower() == "other" ? "" : client.Device.Family;
+
+            var controller = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerName;
+            var action = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
 
             var log = new OperationLog
             {
@@ -53,11 +57,11 @@ namespace NET6.Api.Filters
                 ElapsedMilliseconds = sw.ElapsedMilliseconds,
                 Params = args,
                 Result = result,
-                CreateTime = DateTime.Now,
-                Browser = client.UA.Family,
-                Os = client.OS.Family,
-                Device = device,
+                Browser = client.UA.ToString(),
+                Os = client.OS.ToString(),
+                Device = client.Device.ToString(),
                 BrowserInfo = ua,
+                ApiLabel = $"/{controller}/{action}",
                 IP = CommonFun.GetIP(request)
             };
 
