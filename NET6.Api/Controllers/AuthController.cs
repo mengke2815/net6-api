@@ -37,7 +37,7 @@ namespace NET6.Api.Controllers
             };
             //用户信息
             var claims = new[] {
-                new Claim(ClaimTypes.NameIdentifier, "1"),
+                new Claim(ClaimTypes.NameIdentifier, "123"),
                 new Claim(ClaimTypes.Name, "admin")
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"]));
