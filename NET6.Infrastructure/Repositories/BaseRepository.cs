@@ -7,6 +7,11 @@ using System.Linq.Expressions;
 
 namespace NET6.Infrastructure.Repositories
 {
+    /// <summary>
+    /// 仓储基类
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TDto"></typeparam>
     public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         public SqlSugarClient _sqlSugar;
@@ -83,6 +88,7 @@ namespace NET6.Infrastructure.Repositories
         }
         #endregion
 
+        #region CRUD
         public virtual Task<bool> AnyAsync(Expression<Func<TEntity, bool>> exp)
         {
             return _sqlSugar.Queryable<TEntity>().AnyAsync(exp);
@@ -136,6 +142,7 @@ namespace NET6.Infrastructure.Repositories
             }).ExecuteCommandAsync();
             return result > 0;
         }
+        #endregion
 
         #region 泛型CRUD
         public virtual Task<bool> AnyAsync<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
