@@ -14,12 +14,12 @@ namespace NET6.Api.Filters
     public class LogActionFilter : IAsyncActionFilter
     {
         readonly IHttpContextAccessor _context;
-        readonly OperationLogRepository _logRepository;
+        readonly OperationLogRepository _logRep;
 
-        public LogActionFilter(IHttpContextAccessor context, OperationLogRepository logRepository)
+        public LogActionFilter(IHttpContextAccessor context, OperationLogRepository logRep)
         {
             _context = context;
-            _logRepository = logRepository;
+            _logRep = logRep;
         }
 
         public Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -31,29 +31,25 @@ namespace NET6.Api.Filters
             return LogAsync(context, next);
         }
 
-        public async Task LogAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        private async Task LogAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var sw = new Stopwatch();
             sw.Start();
             var actionResult = (await next()).Result;
             sw.Stop();
-            //操作参数
-            var args = context.ActionArguments.ToJson();
-            //操作结果
-            var result = actionResult?.ToJson();
 
+            var args = context.ActionArguments.ToJson();
+            var result = actionResult?.ToJson();
             var request = _context.HttpContext?.Request;
             var ua = request?.Headers["User-Agent"];
             var client = UAParser.Parser.GetDefault().Parse(ua);
-            //var device = client.Device.Family.ToLower() == "other" ? "" : client.Device.Family;
-
             var controller = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerName.ToLower();
             var action = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName.ToLower();
 
             var log = new OperationLog
             {
                 ApiMethod = context.HttpContext.Request.Method.ToLower(),
-                ApiPath = context.ActionDescriptor.AttributeRouteInfo?.Template?.ToLower(),
+                ApiPath = $"/{controller}/{action}",
                 ElapsedMilliseconds = sw.ElapsedMilliseconds,
                 Params = args,
                 Result = result,
@@ -61,11 +57,10 @@ namespace NET6.Api.Filters
                 Os = client.OS.ToString(),
                 Device = client.Device.ToString(),
                 BrowserInfo = ua,
-                ApiLabel = $"/{controller}/{action}",
                 IP = CommonFun.GetIP(request)
             };
 
-            await _logRepository.AddAsync(log);
+            await _logRep.AddAsync(log);
         }
     }
 }

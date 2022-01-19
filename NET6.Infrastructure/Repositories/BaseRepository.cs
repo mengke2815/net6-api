@@ -97,7 +97,7 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual Task<TDto> GetDtoAsync(Expression<Func<TEntity, bool>> exp)
         {
-            return _sqlSugar.Queryable<TEntity>().Where(s => !s.IsDeleted).Where(exp).Select<TDto>().FirstAsync();
+            return _sqlSugar.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp).Select<TDto>().FirstAsync();
         }
         public virtual Task<int> AddAsync(TEntity entity)
         {
@@ -140,11 +140,15 @@ namespace NET6.Infrastructure.Repositories
         #region 泛型CRUD
         public virtual Task<bool> AnyAsync<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
         {
-            return _sqlSugar.Queryable<T>().Where(s => !s.IsDeleted).AnyAsync(exp);
+            return _sqlSugar.Queryable<T>().AnyAsync(exp);
+        }
+        public virtual ISugarQueryable<T> Query<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
+        {
+            return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Where(exp);
         }
         public virtual Task<Dto> GetDtoAsync<T, Dto>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
         {
-            return _sqlSugar.Queryable<T>().Where(s => !s.IsDeleted).Where(exp).Select<Dto>().FirstAsync();
+            return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Where(exp).Select<Dto>().FirstAsync();
         }
         public virtual ISugarQueryable<Dto> QueryDto<T, Dto>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
         {
@@ -155,13 +159,9 @@ namespace NET6.Infrastructure.Repositories
             CommonFun.CoverNull(entity);
             return _sqlSugar.Insertable(entity).ExecuteCommandAsync();
         }
-        public virtual ISugarQueryable<T> Query<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
-        {
-            return _sqlSugar.Queryable<T>().Where(s => !s.IsDeleted).Where(exp);
-        }
         public virtual Task<T> GetAsync<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
         {
-            return _sqlSugar.Queryable<T>().Where(s => !s.IsDeleted).Where(exp).FirstAsync();
+            return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Where(exp).FirstAsync();
         }
         public virtual async Task<bool> UpdateAsync<T>(Expression<Func<T, bool>> wherexp, Expression<Func<T, T>> upexp) where T : EntityBase, new()
         {
@@ -175,16 +175,16 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual async Task<bool> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
         {
-            var result = await _sqlSugar.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
+            var result = await _sqlSugar.Updateable<T>().Where(a => a.Id.Equals(id)).SetColumns(a => new T()
             {
                 IsDeleted = true,
                 DeleteTime = DateTime.Now
             }).ExecuteCommandAsync();
             return result > 0;
         }
-        public virtual async Task<bool> SoftDeleteAsync<T>(Expression<Func<TEntity, bool>> wherexp) where T : EntityBase, new()
+        public virtual async Task<bool> SoftDeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
         {
-            var result = await _sqlSugar.Updateable<TEntity>().Where(wherexp).SetColumns(a => new TEntity()
+            var result = await _sqlSugar.Updateable<T>().Where(wherexp).SetColumns(a => new T()
             {
                 IsDeleted = true,
                 DeleteTime = DateTime.Now

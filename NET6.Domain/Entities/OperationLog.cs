@@ -33,10 +33,6 @@ namespace NET6.Domain.Entities
         /// </summary>
         public long ElapsedMilliseconds { get; set; }
         /// <summary>
-        /// 接口名称
-        /// </summary>
-        public string ApiLabel { get; set; }
-        /// <summary>
         /// 接口地址
         /// </summary>
         public string ApiPath { get; set; }
