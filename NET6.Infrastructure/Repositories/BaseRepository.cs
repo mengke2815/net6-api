@@ -110,6 +110,11 @@ namespace NET6.Infrastructure.Repositories
             CommonFun.CoverNull(entity);
             return _sqlSugar.Insertable(entity).ExecuteCommandAsync();
         }
+        public virtual Task<int> AddAsync(List<TEntity> entitys)
+        {
+            CommonFun.CoverNull(entitys);
+            return _sqlSugar.Insertable(entitys).ExecuteCommandAsync();
+        }
         public virtual Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> exp)
         {
             return _sqlSugar.Queryable<TEntity>().FirstAsync(exp);
@@ -166,6 +171,11 @@ namespace NET6.Infrastructure.Repositories
             CommonFun.CoverNull(entity);
             return _sqlSugar.Insertable(entity).ExecuteCommandAsync();
         }
+        public virtual Task<int> AddAsync<T>(List<T> entitys) where T : EntityBase, new()
+        {
+            CommonFun.CoverNull(entitys);
+            return _sqlSugar.Insertable(entitys).ExecuteCommandAsync();
+        }
         public virtual Task<T> GetAsync<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
         {
             return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Where(exp).FirstAsync();
@@ -197,6 +207,29 @@ namespace NET6.Infrastructure.Repositories
                 DeleteTime = DateTime.Now
             }).ExecuteCommandAsync();
             return result > 0;
+        }
+        #endregion
+
+        #region 自动分表
+        public virtual Task<int> AddSplitTableAsync<T>(T entity) where T : EntityBase, new()
+        {
+            CommonFun.CoverNull(entity);
+            return _sqlSugar.Insertable(entity).SplitTable().ExecuteCommandAsync();
+        }
+        public virtual Task<int> AddSplitTableAsync<T>(List<T> entitys) where T : EntityBase, new()
+        {
+            CommonFun.CoverNull(entitys);
+            return _sqlSugar.Insertable(entitys).SplitTable().ExecuteCommandAsync();
+        }
+        public virtual Task<int> AddSplitTableAsync(TEntity entity)
+        {
+            CommonFun.CoverNull(entity);
+            return _sqlSugar.Insertable(entity).SplitTable().ExecuteCommandAsync();
+        }
+        public virtual Task<int> AddSplitTableAsync(List<TEntity> entitys)
+        {
+            CommonFun.CoverNull(entitys);
+            return _sqlSugar.Insertable(entitys).SplitTable().ExecuteCommandAsync();
         }
         #endregion
     }

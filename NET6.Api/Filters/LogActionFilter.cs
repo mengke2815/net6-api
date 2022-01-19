@@ -59,8 +59,8 @@ namespace NET6.Api.Filters
                 BrowserInfo = ua,
                 IP = CommonFun.GetIP(request)
             };
-
-            await _logRep.AddAsync(log);
+            //自动分表插入
+            await _logRep.AddSplitTableAsync(log);
         }
     }
 }

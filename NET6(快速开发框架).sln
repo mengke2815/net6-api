@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET6.Domain", "NET6.Domain\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET6.Infrastructure", "NET6.Infrastructure\NET6.Infrastructure.csproj", "{4D3C92BA-D5DF-4653-9109-A4D359EACAED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitySync", "EntitySync\EntitySync.csproj", "{7BD9E30D-090B-4B03-9CDB-5980E617214C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitySync", "EntitySync\EntitySync.csproj", "{7BD9E30D-090B-4B03-9CDB-5980E617214C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

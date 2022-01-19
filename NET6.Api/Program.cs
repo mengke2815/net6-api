@@ -13,6 +13,7 @@ using Serilog;
 using SqlSugar;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
@@ -24,7 +25,7 @@ var _config = new ConfigurationBuilder()
                  .Build();
 
 #region 接口分组
-var group = new List<Tuple<string, string>>
+var groups = new List<Tuple<string, string>>
 {
     //new Tuple<string, string>("Group1","分组一"),
     //new Tuple<string, string>("Group2","分组二")
@@ -53,7 +54,7 @@ builder.Services.AddSwaggerGen(a =>
         Version = "v1",
         Title = "Api"
     });
-    foreach (var item in group)
+    foreach (var item in groups)
     {
         a.SwaggerDoc(item.Item1, new OpenApiInfo { Version = item.Item1, Title = item.Item2, Description = "" });
     }
@@ -143,6 +144,12 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<LogActionFilter>();
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.Converters.Add(new DatetimeJsonConverter());
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
 var app = builder.Build();
@@ -189,7 +196,7 @@ app.UseSwagger();
 app.UseSwaggerUI(a =>
 {
     a.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
-    foreach (var item in group)
+    foreach (var item in groups)
     {
         a.SwaggerEndpoint($"/swagger/{item.Item1}/swagger.json", item.Item2);
     }

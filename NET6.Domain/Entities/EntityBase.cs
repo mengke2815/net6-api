@@ -25,6 +25,7 @@ namespace NET6.Domain.Entities
         /// <summary>
         /// 创建时间
         /// </summary>
+        [SplitField]
         [SugarColumn(ColumnDescription = "创建时间")]
         public DateTime CreateTime { get; set; } = DateTime.Now;
         /// <summary>

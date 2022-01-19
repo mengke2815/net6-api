@@ -3,9 +3,10 @@
 namespace NET6.Domain.Entities
 {
     /// <summary>
-    /// 操作日志
+    /// 操作日志-使用自动分表
     /// </summary>
-    [SugarTable("operation_log")]
+    [SplitTable(SplitType.Month)]
+    [SugarTable("operation_log_{year}{month}{day}")]
     public class OperationLog : EntityBase
     {
         /// <summary>
@@ -27,6 +28,7 @@ namespace NET6.Domain.Entities
         /// <summary>
         /// 浏览器信息
         /// </summary>
+        [SugarColumn(ColumnDataType = "text")]
         public string BrowserInfo { get; set; }
         /// <summary>
         /// 耗时（毫秒）
@@ -43,10 +45,12 @@ namespace NET6.Domain.Entities
         /// <summary>
         /// 操作参数
         /// </summary>
+        [SugarColumn(ColumnDataType = "text")]
         public string Params { get; set; }
         /// <summary>
         /// 操作结果
         /// </summary>
+        [SugarColumn(ColumnDataType = "text")]
         public string Result { get; set; }
     }
 }
