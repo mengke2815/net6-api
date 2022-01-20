@@ -1,9 +1,11 @@
-﻿using NET6.Domain.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using NET6.Domain.Entities;
 using NET6.Domain.Enums;
 using NET6.Infrastructure.Tools;
 using SqlSugar;
 using System.Data;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace NET6.Infrastructure.Repositories
 {
@@ -14,9 +16,11 @@ namespace NET6.Infrastructure.Repositories
     /// <typeparam name="TDto"></typeparam>
     public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
+        readonly IHttpContextAccessor _context;
         public SqlSugarClient _sqlSugar;
-        public BaseRepository(SqlSugarClient sqlSugar)
+        public BaseRepository(IHttpContextAccessor context, SqlSugarClient sqlSugar)
         {
+            _context = context;
             _sqlSugar = sqlSugar;
         }
 
@@ -107,11 +111,16 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual Task<int> AddAsync(TEntity entity)
         {
+            entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             CommonFun.CoverNull(entity);
             return _sqlSugar.Insertable(entity).ExecuteCommandAsync();
         }
         public virtual Task<int> AddAsync(List<TEntity> entitys)
         {
+            foreach (var item in entitys)
+            {
+                item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
             CommonFun.CoverNull(entitys);
             return _sqlSugar.Insertable(entitys).ExecuteCommandAsync();
         }
@@ -131,19 +140,23 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual async Task<bool> SoftDeleteAsync(string id)
         {
+            var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = await _sqlSugar.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
             {
                 IsDeleted = true,
-                DeleteTime = DateTime.Now
+                DeleteTime = DateTime.Now,
+                DeleteUserId = userid
             }).ExecuteCommandAsync();
             return result > 0;
         }
         public virtual async Task<bool> SoftDeleteAsync(Expression<Func<TEntity, bool>> wherexp)
         {
+            var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = await _sqlSugar.Updateable<TEntity>().Where(wherexp).SetColumns(a => new TEntity()
             {
                 IsDeleted = true,
-                DeleteTime = DateTime.Now
+                DeleteTime = DateTime.Now,
+                DeleteUserId = userid
             }).ExecuteCommandAsync();
             return result > 0;
         }
@@ -168,11 +181,16 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual Task<int> AddAsync<T>(T entity) where T : EntityBase, new()
         {
+            entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             CommonFun.CoverNull(entity);
             return _sqlSugar.Insertable(entity).ExecuteCommandAsync();
         }
         public virtual Task<int> AddAsync<T>(List<T> entitys) where T : EntityBase, new()
         {
+            foreach (var item in entitys)
+            {
+                item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
             CommonFun.CoverNull(entitys);
             return _sqlSugar.Insertable(entitys).ExecuteCommandAsync();
         }
@@ -192,19 +210,23 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual async Task<bool> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
         {
+            var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = await _sqlSugar.Updateable<T>().Where(a => a.Id.Equals(id)).SetColumns(a => new T()
             {
                 IsDeleted = true,
-                DeleteTime = DateTime.Now
+                DeleteTime = DateTime.Now,
+                DeleteUserId = userid
             }).ExecuteCommandAsync();
             return result > 0;
         }
         public virtual async Task<bool> SoftDeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
         {
+            var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var result = await _sqlSugar.Updateable<T>().Where(wherexp).SetColumns(a => new T()
             {
                 IsDeleted = true,
-                DeleteTime = DateTime.Now
+                DeleteTime = DateTime.Now,
+                DeleteUserId = userid
             }).ExecuteCommandAsync();
             return result > 0;
         }
@@ -213,6 +235,7 @@ namespace NET6.Infrastructure.Repositories
         #region 自动分表
         public virtual Task<int> AddSplitTableAsync<T>(T entity) where T : EntityBase, new()
         {
+            entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             CommonFun.CoverNull(entity);
             return _sqlSugar.Insertable(entity).SplitTable().ExecuteCommandAsync();
         }
@@ -223,6 +246,7 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual Task<int> AddSplitTableAsync(TEntity entity)
         {
+            entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             CommonFun.CoverNull(entity);
             return _sqlSugar.Insertable(entity).SplitTable().ExecuteCommandAsync();
         }

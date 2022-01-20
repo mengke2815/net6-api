@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NET6.Api.Filters;
 using NET6.Api.Services;
+using NET6.Domain.Enums;
 using NET6.Infrastructure.Tools;
 using Serilog;
 using SqlSugar;
@@ -37,7 +38,7 @@ builder.Services.AddScoped(options =>
 {
     return new SqlSugarClient(new List<ConnectionConfig>()
     {
-        new ConnectionConfig() { ConfigId = "0", ConnectionString = _config.GetConnectionString("SugarConnectString"), DbType = DbType.MySql, IsAutoCloseConnection = true }
+        new ConnectionConfig() { ConfigId = DBEnum.Ä¬ÈÏÊý¾Ý¿â, ConnectionString = _config.GetConnectionString("SugarConnectString"), DbType = DbType.MySql, IsAutoCloseConnection = true }
     });
 });
 #endregion

@@ -5,7 +5,6 @@ using NET6.Domain.Entities;
 using NET6.Infrastructure.Repositories;
 using NET6.Infrastructure.Tools;
 using System.Diagnostics;
-using System.Security.Claims;
 
 namespace NET6.Api.Filters
 {
@@ -58,8 +57,7 @@ namespace NET6.Api.Filters
                 Os = client.OS.ToString(),
                 Device = client.Device.ToString(),
                 BrowserInfo = ua,
-                IP = CommonFun.GetIP(request),
-                CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                IP = CommonFun.GetIP(request)
             };
             //自动分表插入
             await _logRep.AddSplitTableAsync(log);

@@ -1,4 +1,5 @@
-﻿using NET6.Domain.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using NET6.Domain.Entities;
 using NET6.Domain.ViewModels;
 using SqlSugar;
 
@@ -9,7 +10,7 @@ namespace NET6.Infrastructure.Repositories
     /// </summary>
     public class OperationLogRepository : BaseRepository<OperationLog, OperationLogView>
     {
-        public OperationLogRepository(SqlSugarClient sqlSugar) : base(sqlSugar)
+        public OperationLogRepository(IHttpContextAccessor context, SqlSugarClient sqlSugar) : base(context, sqlSugar)
         {
 
         }
