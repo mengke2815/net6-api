@@ -70,35 +70,37 @@ namespace NET6.Api.Controllers
         [ProducesResponseType(typeof(LoginView), StatusCodes.Status200OK)]
         public async Task<IActionResult> RefreshAsync(RefreshTokenDto dto)
         {
-            var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(dto.AccessToken);
-            var userid = jwtSecurityToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
-            var username = jwtSecurityToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Name)?.Value;
-            var refreshtoken = CacheHelper.Get<string>($"refreshtoken_{userid}");
-            if (refreshtoken != null)
+            try
             {
-                if (refreshtoken == dto.RefreshToken)
+                var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(dto.AccessToken);
+                var userid = jwtSecurityToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+                var username = jwtSecurityToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Name)?.Value;
+                var refreshtoken = CacheHelper.Get<string>($"refreshtoken_{userid}");
+                if (refreshtoken == null) return Ok(JsonView("未找到该刷新令牌"));
+                if (refreshtoken != dto.RefreshToken) return Ok(JsonView("刷新令牌不正确"));
+                //生成一个新的刷新令牌
+                refreshtoken = CommonFun.GUID;
+                CacheHelper.Set($"refreshtoken_{userid}", refreshtoken, TimeSpan.FromDays(30));
+                var view = new LoginView
                 {
-                    //生成一个刷新令牌
-                    refreshtoken = CommonFun.GUID;
-                    CacheHelper.Set($"refreshtoken_{userid}", refreshtoken, TimeSpan.FromDays(30));
-                    var view = new LoginView
-                    {
-                        Expires = DateTime.Now.AddDays(7),
-                        RefreshToken = refreshtoken
-                    };
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"]));
-                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                    var token = new JwtSecurityToken(
-                        issuer: "net6api.com",
-                        audience: "net6api.com",
-                        claims: jwtSecurityToken.Claims,
-                        expires: view.Expires,
-                        signingCredentials: creds);
-                    view.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
-                    return Ok(JsonView(view));
-                }
+                    Expires = DateTime.Now.AddDays(7),
+                    RefreshToken = refreshtoken
+                };
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(
+                    issuer: "net6api.com",
+                    audience: "net6api.com",
+                    claims: jwtSecurityToken.Claims,
+                    expires: view.Expires,
+                    signingCredentials: creds);
+                view.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
+                return Ok(JsonView(view));
             }
-            return Ok(JsonView("刷新失败"));
+            catch (Exception)
+            {
+                return Ok(JsonView("请求令牌解析失败"));
+            }
         }
     }
 }

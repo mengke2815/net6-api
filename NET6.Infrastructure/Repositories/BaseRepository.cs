@@ -241,6 +241,10 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual Task<int> AddSplitTableAsync<T>(List<T> entitys) where T : EntityBase, new()
         {
+            foreach (var item in entitys)
+            {
+                item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
             CommonFun.CoverNull(entitys);
             return _sqlSugar.Insertable(entitys).SplitTable().ExecuteCommandAsync();
         }
@@ -252,6 +256,10 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual Task<int> AddSplitTableAsync(List<TEntity> entitys)
         {
+            foreach (var item in entitys)
+            {
+                item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
             CommonFun.CoverNull(entitys);
             return _sqlSugar.Insertable(entitys).SplitTable().ExecuteCommandAsync();
         }
