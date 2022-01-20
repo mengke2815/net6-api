@@ -97,6 +97,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidAudience = "net6api.com",
         ValidIssuer = "net6api.com",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"])),
+        ClockSkew = TimeSpan.Zero
+    };
+    //监听JWT过期事件
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                context.Response.Headers.Add("jwtexception", "expired");
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 #endregion

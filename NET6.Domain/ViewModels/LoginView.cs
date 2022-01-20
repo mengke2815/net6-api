@@ -6,9 +6,13 @@
     public class LoginView
     {
         /// <summary>
-        /// token
+        /// 访问令牌
         /// </summary>
-        public string Token { get; set; }
+        public string AccessToken { get; set; }
+        /// <summary>
+        /// 刷新令牌
+        /// </summary>
+        public string RefreshToken { get; set; }
         /// <summary>
         /// 过期时间
         /// </summary>
