@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace NET6.Infrastructure.Tools
 {
+    /// <summary>
+    /// Json日期格式化
+    /// </summary>
     public class DatetimeJsonConverter : JsonConverter<DateTime>
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -14,7 +17,6 @@ namespace NET6.Infrastructure.Tools
             }
             return reader.GetDateTime();
         }
-
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
             writer.WriteStringValue(value.ToString("yyyy-MM-dd HH:mm:ss"));
