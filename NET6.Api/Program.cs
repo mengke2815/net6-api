@@ -115,13 +115,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 #endregion
 
 #region 初始化日志
-Log.Logger = new LoggerConfiguration()
-       .MinimumLevel.Warning()
-       .Enrich.FromLogContext()
-       .WriteTo.Console()
-       .WriteTo.File(Path.Combine("Logs", @"Log.txt"), rollingInterval: RollingInterval.Day)
-       .CreateLogger();
-builder.Host.UseSerilog(Log.Logger, dispose: true);
+builder.Host.UseSerilog((builderContext, config) =>
+{
+    config
+    .MinimumLevel.Warning()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(Path.Combine("Logs", @"Log.txt"), rollingInterval: RollingInterval.Day);
+});
 #endregion
 
 #region 允许服务器同步IO
