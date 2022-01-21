@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NET6.Domain.Dtos;
+using NET6.Domain.Enums;
 using NET6.Domain.ViewModels;
 using NET6.Infrastructure.Tools;
 using System.IdentityModel.Tokens.Jwt;
@@ -35,9 +36,10 @@ namespace NET6.Api.Controllers
             var userid = "123";
             var username = "admin";
 
+            #region 签发JWT
             //生成一个刷新令牌
             var refreshtoken = CommonFun.GUID;
-            CacheHelper.Set($"refreshtoken_{userid}", refreshtoken, TimeSpan.FromDays(30));
+            CacheHelper.Set($"{CacheEnum.刷新令牌}_{userid}", refreshtoken, TimeSpan.FromDays(30));
             var view = new LoginView
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -58,6 +60,7 @@ namespace NET6.Api.Controllers
                 signingCredentials: creds);
             view.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
             return Ok(JsonView(view));
+            #endregion
         }
 
         /// <summary>
@@ -72,15 +75,16 @@ namespace NET6.Api.Controllers
         {
             try
             {
-                var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(dto.AccessToken);
-                var userid = jwtSecurityToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
-                var username = jwtSecurityToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Name)?.Value;
-                var refreshtoken = CacheHelper.Get<string>($"refreshtoken_{userid}");
+                var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(dto.AccessToken);
+                var userid = jwtToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+                var username = jwtToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Name)?.Value;
+                var refreshtoken = CacheHelper.Get<string>($"{CacheEnum.刷新令牌}_{userid}");
                 if (refreshtoken == null) return Ok(JsonView("未找到该刷新令牌"));
                 if (refreshtoken != dto.RefreshToken) return Ok(JsonView("刷新令牌不正确"));
+                #region 签发JWT
                 //生成一个新的刷新令牌
                 refreshtoken = CommonFun.GUID;
-                CacheHelper.Set($"refreshtoken_{userid}", refreshtoken, TimeSpan.FromDays(30));
+                CacheHelper.Set($"{CacheEnum.刷新令牌}_{userid}", refreshtoken, TimeSpan.FromDays(30));
                 var view = new LoginView
                 {
                     Expires = DateTime.Now.AddDays(7),
@@ -91,11 +95,12 @@ namespace NET6.Api.Controllers
                 var token = new JwtSecurityToken(
                     issuer: "net6api.com",
                     audience: "net6api.com",
-                    claims: jwtSecurityToken.Claims,
+                    claims: jwtToken.Claims,
                     expires: view.Expires,
                     signingCredentials: creds);
                 view.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
                 return Ok(JsonView(view));
+                #endregion
             }
             catch (Exception)
             {

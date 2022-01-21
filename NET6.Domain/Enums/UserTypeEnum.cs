@@ -1,7 +1,7 @@
 ﻿namespace NET6.Domain.Enums
 {
     /// <summary>
-    /// 用户类型
+    /// 用户类型枚举
     /// </summary>
     public enum UserTypeEnum : int
     {
