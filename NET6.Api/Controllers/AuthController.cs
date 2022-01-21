@@ -64,7 +64,7 @@ namespace NET6.Api.Controllers
         }
 
         /// <summary>
-        /// 刷新令牌
+        /// 刷新访问令牌
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
