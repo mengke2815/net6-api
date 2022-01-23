@@ -263,6 +263,14 @@ namespace NET6.Infrastructure.Repositories
             CommonFun.CoverNull(entitys);
             return _sqlSugar.Insertable(entitys).SplitTable().ExecuteCommandAsync();
         }
+        public virtual string GetTableName(DateTime datetime)
+        {
+            return _sqlSugar.SplitHelper<TEntity>().GetTableName(datetime);
+        }
+        public virtual string GetTableName<T>(DateTime datetime) where T : EntityBase, new()
+        {
+            return _sqlSugar.SplitHelper<T>().GetTableName(datetime);
+        }
         #endregion
     }
 }

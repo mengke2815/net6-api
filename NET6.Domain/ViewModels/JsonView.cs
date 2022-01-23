@@ -14,12 +14,12 @@
         /// </summary>
         public string Msg { get; set; }
         /// <summary>
-        /// 数据
-        /// </summary>
-        public object Data { get; set; }
-        /// <summary>
         /// 条数
         /// </summary>
         public int Count { get; set; }
+        /// <summary>
+        /// 数据
+        /// </summary>
+        public object Data { get; set; }
     }
 }
