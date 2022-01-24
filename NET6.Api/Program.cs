@@ -12,6 +12,7 @@ using NET6.Domain.Enums;
 using NET6.Infrastructure.Tools;
 using Serilog;
 using SqlSugar;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -126,8 +127,8 @@ builder.Host.UseSerilog((builderContext, config) =>
 #endregion
 
 #region 允许服务器同步IO
-builder.Services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true)
-        .Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
+builder.Services.Configure<KestrelServerOptions>(a => a.AllowSynchronousIO = true)
+                .Configure<IISServerOptions>(a => a.AllowSynchronousIO = true);
 #endregion
 
 #region 初始化Autofac，注册程序集
@@ -199,10 +200,10 @@ app.UseStaticFiles(new StaticFileOptions
 
 #region 启用跨域访问
 app.UseCors(builder => builder
-       .WithOrigins(_config["Origins"])
-       .AllowCredentials()
-       .AllowAnyMethod()
-       .AllowAnyHeader());
+   .WithOrigins(_config["Origins"])
+   .AllowCredentials()
+   .AllowAnyMethod()
+   .AllowAnyHeader());
 #endregion
 
 app.UseRouting();
@@ -219,7 +220,7 @@ app.UseSwaggerUI(a =>
         a.SwaggerEndpoint($"/swagger/{item.Item1}/swagger.json", item.Item2);
     }
     a.RoutePrefix = string.Empty;
-    a.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+    a.DocExpansion(DocExpansion.None);
     a.DefaultModelsExpandDepth(-1);//不显示Models
 });
 
