@@ -116,7 +116,7 @@ namespace NET6.Infrastructure.Tools
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static DataTable? ExcelToDataTable(string filePath)
+        public static DataTable ExcelToDataTable(string filePath)
         {
             try
             {

@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
+		<Nullable>disable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
@@ -11,22 +11,22 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <NoWarn>1701;1702;1591;8601</NoWarn>
+		<NoWarn>1701;1702;1591</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <NoWarn>1701;1702;1591</NoWarn>
+		<NoWarn>1701;1702;1591</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Files\**" />
-	  <Compile Remove="Logs\**" />
-	  <Content Remove="Files\**" />
-	  <Content Remove="Logs\**" />
-	  <EmbeddedResource Remove="Files\**" />
-	  <EmbeddedResource Remove="Logs\**" />
-	  <None Remove="Files\**" />
-	  <None Remove="Logs\**" />
+		<Compile Remove="Files\**" />
+		<Compile Remove="Logs\**" />
+		<Content Remove="Files\**" />
+		<Content Remove="Logs\**" />
+		<EmbeddedResource Remove="Files\**" />
+		<EmbeddedResource Remove="Logs\**" />
+		<None Remove="Files\**" />
+		<None Remove="Logs\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -43,7 +43,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\NET6.Infrastructure\NET6.Infrastructure.csproj" />
+		<ProjectReference Include="..\NET6.Infrastructure\NET6.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

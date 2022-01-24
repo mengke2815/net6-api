@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,9 +15,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="EPPlus" Version="5.8.5" />
-	  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-	  <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
+		<PackageReference Include="EPPlus" Version="5.8.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

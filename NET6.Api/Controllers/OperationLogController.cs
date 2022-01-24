@@ -29,7 +29,7 @@ namespace NET6.Api.Controllers
         [NoLog]
         [HttpGet]
         [ProducesResponseType(typeof(List<OperationLogView>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> ListAsync(string? keyword, int page = 1, int size = 15)
+        public async Task<IActionResult> ListAsync(string keyword, int page = 1, int size = 15)
         {
             var tablename = _operationlogRep.GetTableName(DateTime.Now);
             var query = _operationlogRep.Query(a => !a.IsDeleted);

@@ -13,7 +13,7 @@ namespace NET6.Api.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        protected virtual string? CurrentUserId => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        protected virtual string CurrentUserId => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         protected virtual void Logs(string str)
         {
             Log.Error(str);

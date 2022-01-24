@@ -5,7 +5,13 @@
     /// </summary>
     public enum UserTypeEnum : int
     {
+        /// <summary>
+        /// 普通用户
+        /// </summary>
         普通用户 = 1,
+        /// <summary>
+        /// 企业用户
+        /// </summary>
         企业用户 = 2
     }
 }

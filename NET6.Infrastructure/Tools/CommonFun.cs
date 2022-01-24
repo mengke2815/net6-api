@@ -28,7 +28,7 @@ namespace NET6.Infrastructure.Tools
         {
             return JsonConvert.SerializeObject(obj);
         }
-        public static object? GetDefaultVal(string typename)
+        public static object GetDefaultVal(string typename)
         {
             return typename switch
             {
