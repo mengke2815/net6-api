@@ -10,19 +10,11 @@ namespace NET6.Infrastructure.Tools
     /// </summary>
     public class CacheHelper
     {
-        private static MemoryCache cache;
+        /// <summary>
+        /// 缓存实例
+        /// </summary>
+        static readonly MemoryCache Cache = new(new MemoryCacheOptions());
 
-        public static MemoryCache Cache
-        {
-            get
-            {
-                if (cache == null)
-                {
-                    cache = new MemoryCache(new MemoryCacheOptions());
-                }
-                return cache;
-            }
-        }
         /// <summary>
         /// 验证缓存项是否存在
         /// </summary>
@@ -178,7 +170,7 @@ namespace NET6.Infrastructure.Tools
         /// <returns></returns>
         public static void RemoveCacheRegex(string pattern)
         {
-            IList<string> l = SearchCacheRegex(pattern);
+            var l = SearchCacheRegex(pattern);
             foreach (var s in l)
             {
                 Remove(s);
@@ -205,9 +197,8 @@ namespace NET6.Infrastructure.Tools
         {
             const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
             var entries = Cache.GetType().GetField("_entries", flags).GetValue(Cache);
-            var cacheItems = entries as IDictionary;
             var keys = new List<string>();
-            if (cacheItems == null) return keys;
+            if (entries is not IDictionary cacheItems) return keys;
             foreach (DictionaryEntry cacheItem in cacheItems)
             {
                 keys.Add(cacheItem.Key.ToString());

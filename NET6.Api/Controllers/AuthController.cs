@@ -32,10 +32,10 @@ namespace NET6.Api.Controllers
         [ProducesResponseType(typeof(LoginView), StatusCodes.Status200OK)]
         public async Task<IActionResult> LoginAsync(LoginDto dto)
         {
-            //校验用户信息
+            #region 校验用户信息
             var userid = "123";
             var username = "admin";
-
+            #endregion
             #region 签发JWT
             //生成一个刷新令牌
             var refreshtoken = CommonFun.GUID;

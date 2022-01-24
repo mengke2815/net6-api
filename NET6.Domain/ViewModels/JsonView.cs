@@ -16,7 +16,7 @@
         /// <summary>
         /// 条数
         /// </summary>
-        public int Count { get; set; }
+        public int? Count { get; set; }
         /// <summary>
         /// 数据
         /// </summary>
