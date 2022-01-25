@@ -182,7 +182,7 @@ namespace NET6.Api.Controllers
                 { "City", "城市" },
                 { "Detail", "详细地址" }
             };
-            var title = "列表导出(" + DateTime.Now.ToString("yyyyMMddHHmmss") + ")";
+            var title = $"列表导出({DateTime.Now:yyyyMMddHHmmss})";
             var outColumn = new List<string>();
             var fs = ExcelExportImportHelper.GetByteToExportExcel(list, columns, outColumn, "列表导出", title, false);
             return File(fs, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", title + ".xlsx");
