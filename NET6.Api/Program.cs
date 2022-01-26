@@ -131,19 +131,12 @@ builder.Services.Configure<KestrelServerOptions>(a => a.AllowSynchronousIO = tru
                 .Configure<IISServerOptions>(a => a.AllowSynchronousIO = true);
 #endregion
 
-#region 初始化Autofac，注册程序集
+#region 初始化Autofac，注入程序集
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
-    try
-    {
-        var assemblyServices = Assembly.Load("NET6.Infrastructure");
-        builder.RegisterAssemblyTypes(assemblyServices).Where(a => a.Name.EndsWith("Repository")).AsSelf();
-    }
-    catch (Exception ex)
-    {
-        throw new Exception(ex.Message + "\n" + ex.InnerException);
-    }
+    var assembly = Assembly.Load("NET6.Infrastructure");
+    builder.RegisterAssemblyTypes(assembly).Where(a => a.Name.EndsWith("Repository")).AsSelf();
 });
 #endregion
 
@@ -151,11 +144,11 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 builder.Services.AddHostedService<TimerService>();
 #endregion
 
-#region 注册系统缓存
+#region 注入系统缓存
 builder.Services.AddMemoryCache();
 #endregion
 
-#region 注册http上下文
+#region 注入http上下文
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 #endregion
 

@@ -104,7 +104,7 @@ namespace NET6.Api.Controllers
             }
             catch (Exception)
             {
-                return Ok(JsonView("请求令牌解析失败"));
+                return Ok(JsonView("访问令牌解析失败"));
             }
         }
     }
