@@ -124,7 +124,7 @@ namespace NET6.Api.Controllers
                     IsDefault = dto.IsDefault
                 });
                 _addressRep.CommitTran();
-                if (result) return Ok(JsonView(true));
+                if (result > 0) return Ok(JsonView(true));
                 return Ok(JsonView(false));
             }
             catch (Exception e)
@@ -150,7 +150,7 @@ namespace NET6.Api.Controllers
                 _addressRep.BeginTran();
                 var result = await _addressRep.SoftDeleteAsync(a => a.Id == Id);
                 _addressRep.CommitTran();
-                if (result) return Ok(JsonView(true));
+                if (result > 0) return Ok(JsonView(true));
                 return Ok(JsonView(false));
             }
             catch (Exception e)

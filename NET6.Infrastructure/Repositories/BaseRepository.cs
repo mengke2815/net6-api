@@ -128,37 +128,37 @@ namespace NET6.Infrastructure.Repositories
         {
             return _sqlSugar.Queryable<TEntity>().FirstAsync(exp);
         }
-        public virtual async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> wherexp)
+        public virtual Task<TEntity> GetAsync(string id)
         {
-            var result = await _sqlSugar.Deleteable<TEntity>().Where(wherexp).ExecuteCommandAsync();
-            return result > 0;
+            return _sqlSugar.Queryable<TEntity>().InSingleAsync(id);
         }
-        public virtual async Task<bool> UpdateAsync(Expression<Func<TEntity, bool>> wherexp, Expression<Func<TEntity, TEntity>> upexp)
+        public virtual Task<int> DeleteAsync(Expression<Func<TEntity, bool>> wherexp)
         {
-            var result = await _sqlSugar.Updateable<TEntity>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
-            return result > 0;
+            return _sqlSugar.Deleteable<TEntity>().Where(wherexp).ExecuteCommandAsync();
         }
-        public virtual async Task<bool> SoftDeleteAsync(string id)
+        public virtual Task<int> UpdateAsync(Expression<Func<TEntity, bool>> wherexp, Expression<Func<TEntity, TEntity>> upexp)
+        {
+            return _sqlSugar.Updateable<TEntity>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
+        }
+        public virtual Task<int> SoftDeleteAsync(string id)
         {
             var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _sqlSugar.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
+            return _sqlSugar.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
             {
                 IsDeleted = true,
                 DeleteTime = DateTime.Now,
                 DeleteUserId = userid
             }).ExecuteCommandAsync();
-            return result > 0;
         }
-        public virtual async Task<bool> SoftDeleteAsync(Expression<Func<TEntity, bool>> wherexp)
+        public virtual Task<int> SoftDeleteAsync(Expression<Func<TEntity, bool>> wherexp)
         {
             var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _sqlSugar.Updateable<TEntity>().Where(wherexp).SetColumns(a => new TEntity()
+            return _sqlSugar.Updateable<TEntity>().Where(wherexp).SetColumns(a => new TEntity()
             {
                 IsDeleted = true,
                 DeleteTime = DateTime.Now,
                 DeleteUserId = userid
             }).ExecuteCommandAsync();
-            return result > 0;
         }
         #endregion
 
@@ -196,39 +196,39 @@ namespace NET6.Infrastructure.Repositories
         }
         public virtual Task<T> GetAsync<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
         {
-            return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Where(exp).FirstAsync();
+            return _sqlSugar.Queryable<T>().Where(exp).FirstAsync();
         }
-        public virtual async Task<bool> UpdateAsync<T>(Expression<Func<T, bool>> wherexp, Expression<Func<T, T>> upexp) where T : EntityBase, new()
+        public virtual Task<T> GetAsync<T>(string id) where T : EntityBase, new()
         {
-            var result = await _sqlSugar.Updateable<T>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
-            return result > 0;
+            return _sqlSugar.Queryable<T>().InSingleAsync(id);
         }
-        public virtual async Task<bool> DeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
+        public virtual Task<int> UpdateAsync<T>(Expression<Func<T, bool>> wherexp, Expression<Func<T, T>> upexp) where T : EntityBase, new()
         {
-            var result = await _sqlSugar.Deleteable<T>().Where(wherexp).ExecuteCommandAsync();
-            return result > 0;
+            return _sqlSugar.Updateable<T>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
         }
-        public virtual async Task<bool> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
+        public virtual Task<int> DeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
+        {
+            return _sqlSugar.Deleteable<T>().Where(wherexp).ExecuteCommandAsync();
+        }
+        public virtual Task<int> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
         {
             var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _sqlSugar.Updateable<T>().Where(a => a.Id.Equals(id)).SetColumns(a => new T()
+            return _sqlSugar.Updateable<T>().Where(a => a.Id.Equals(id)).SetColumns(a => new T()
             {
                 IsDeleted = true,
                 DeleteTime = DateTime.Now,
                 DeleteUserId = userid
             }).ExecuteCommandAsync();
-            return result > 0;
         }
-        public virtual async Task<bool> SoftDeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
+        public virtual Task<int> SoftDeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
         {
             var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _sqlSugar.Updateable<T>().Where(wherexp).SetColumns(a => new T()
+            return _sqlSugar.Updateable<T>().Where(wherexp).SetColumns(a => new T()
             {
                 IsDeleted = true,
                 DeleteTime = DateTime.Now,
                 DeleteUserId = userid
             }).ExecuteCommandAsync();
-            return result > 0;
         }
         #endregion
 
