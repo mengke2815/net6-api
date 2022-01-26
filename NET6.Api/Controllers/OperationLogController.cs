@@ -32,7 +32,7 @@ namespace NET6.Api.Controllers
         public async Task<IActionResult> ListAsync(string keyword, int page = 1, int size = 15)
         {
             var tablename = _operationlogRep.GetTableName(DateTime.Now);
-            var query = _operationlogRep.Query(a => !a.IsDeleted);
+            var query = _operationlogRep.Query();
             if (keyword.NotNull())
             {
                 query.Where(a => a.Params.Contains(keyword) || a.Result.Contains(keyword));

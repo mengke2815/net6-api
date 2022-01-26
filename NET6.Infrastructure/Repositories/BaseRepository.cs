@@ -101,9 +101,17 @@ namespace NET6.Infrastructure.Repositories
         {
             return _sqlSugar.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp);
         }
+        public virtual ISugarQueryable<TEntity> Query()
+        {
+            return _sqlSugar.Queryable<TEntity>().Where(a => !a.IsDeleted);
+        }
         public virtual ISugarQueryable<TDto> QueryDto(Expression<Func<TEntity, bool>> exp)
         {
             return _sqlSugar.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp).Select<TDto>();
+        }
+        public virtual ISugarQueryable<TDto> QueryDto()
+        {
+            return _sqlSugar.Queryable<TEntity>().Where(a => !a.IsDeleted).Select<TDto>();
         }
         public virtual Task<TDto> GetDtoAsync(Expression<Func<TEntity, bool>> exp)
         {
@@ -171,6 +179,10 @@ namespace NET6.Infrastructure.Repositories
         {
             return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Where(exp);
         }
+        public virtual ISugarQueryable<T> Query<T>() where T : EntityBase, new()
+        {
+            return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted);
+        }
         public virtual Task<Dto> GetDtoAsync<T, Dto>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
         {
             return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Where(exp).Select<Dto>().FirstAsync();
@@ -178,6 +190,10 @@ namespace NET6.Infrastructure.Repositories
         public virtual ISugarQueryable<Dto> QueryDto<T, Dto>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
         {
             return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Where(exp).Select<Dto>();
+        }
+        public virtual ISugarQueryable<Dto> QueryDto<T, Dto>() where T : EntityBase, new()
+        {
+            return _sqlSugar.Queryable<T>().Where(a => !a.IsDeleted).Select<Dto>();
         }
         public virtual Task<int> AddAsync<T>(T entity) where T : EntityBase, new()
         {

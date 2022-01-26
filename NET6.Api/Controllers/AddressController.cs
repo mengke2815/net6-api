@@ -28,7 +28,7 @@ namespace NET6.Api.Controllers
         [ProducesResponseType(typeof(AddressView), StatusCodes.Status200OK)]
         public async Task<IActionResult> DefaultAsync()
         {
-            var model = await _addressRep.GetDtoAsync(a => !a.IsDeleted && a.IsDefault && a.UserId == CurrentUserId);
+            var model = await _addressRep.GetDtoAsync(a => a.IsDefault && a.UserId == CurrentUserId);
             if (model == null) return Ok(JsonView("未找到默认地址"));
             return Ok(JsonView(model));
         }
@@ -36,13 +36,13 @@ namespace NET6.Api.Controllers
         /// <summary>
         /// 单个
         /// </summary>
-        /// <param name="Id">编号</param>
+        /// <param name="id">编号</param>
         /// <returns></returns>
-        [HttpGet("{Id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(AddressView), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAsync(string Id)
+        public async Task<IActionResult> GetAsync(string id)
         {
-            var model = await _addressRep.GetDtoAsync(a => !a.IsDeleted && a.Id == Id);
+            var model = await _addressRep.GetDtoAsync(a => a.Id == id);
             if (model == null) return Ok(JsonView("未找到数据"));
             return Ok(JsonView(model));
         }
@@ -50,14 +50,19 @@ namespace NET6.Api.Controllers
         /// <summary>
         /// 列表
         /// </summary>
+        /// <param name="keyword">关键字</param>
         /// <param name="page">当前页码</param>
         /// <param name="size">每页条数</param>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(List<AddressView>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> ListAsync(int page = 1, int size = 15)
+        public async Task<IActionResult> ListAsync(string keyword, int page = 1, int size = 15)
         {
-            var query = _addressRep.QueryDto(a => !a.IsDeleted);
+            var query = _addressRep.QueryDto();
+            if (keyword.NotNull())
+            {
+                query.Where(a => a.Detail.Contains(keyword));
+            }
             RefAsync<int> count = 0;
             var list = await query.OrderBy(a => a.IsDefault).ToPageListAsync(page, size, count);
             return Ok(JsonView(list, count));
@@ -102,18 +107,18 @@ namespace NET6.Api.Controllers
         /// <summary>
         /// 修改
         /// </summary>
-        /// <param name="Id">编号</param>
+        /// <param name="id">编号</param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [HttpPut("{Id}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> EditAsync(string Id, AddressDto dto)
+        public async Task<IActionResult> EditAsync(string id, AddressDto dto)
         {
             try
             {
                 //开启事务
                 _addressRep.BeginTran();
-                var result = await _addressRep.UpdateAsync(a => a.Id == Id, a => new Address
+                var result = await _addressRep.UpdateAsync(a => a.Id == id, a => new Address
                 {
                     Name = dto.Name,
                     Phone = dto.Phone,
@@ -138,17 +143,17 @@ namespace NET6.Api.Controllers
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="Id">编号</param>
+        /// <param name="id">编号</param>
         /// <returns></returns>
-        [HttpDelete("{Id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteAsync(string Id)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
             try
             {
                 //开启事务操作资源
                 _addressRep.BeginTran();
-                var result = await _addressRep.SoftDeleteAsync(a => a.Id == Id);
+                var result = await _addressRep.SoftDeleteAsync(a => a.Id == id);
                 _addressRep.CommitTran();
                 if (result > 0) return Ok(JsonView(true));
                 return Ok(JsonView(false));
@@ -171,7 +176,7 @@ namespace NET6.Api.Controllers
         [ProducesResponseType(typeof(List<AddressView>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ExportAsync(int page = 1, int size = 15)
         {
-            var query = _addressRep.QueryDto(a => !a.IsDeleted);
+            var query = _addressRep.QueryDto();
             RefAsync<int> count = 0;
             var list = await query.OrderBy(a => a.IsDefault).ToPageListAsync(page, size, count);
             var columns = new Dictionary<string, string>
