@@ -9,6 +9,15 @@
 #### 本项目框架及功能将在日后逐步更新，敬请期待！
 
 
+## 如果本项目对您有参考、启发或借鉴意义，可以请我喝杯咖啡，您的慷慨，我的动力！
+
+| 支付宝  | 微信  |
+| :------------: | :------------: |
+| <img src="https://gitee.com/mengke2815/static-file/raw/master/images/alipay.jpg" width="200"/> | <img src="https://gitee.com/mengke2815/static-file/raw/master/images/wxpay.jpg" width="200" /> |
+
+希望越来越多的人能够热爱.NET……
+
+
 
 
 
