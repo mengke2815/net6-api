@@ -66,6 +66,10 @@ namespace NET6.Infrastructure.Repositories
         #endregion
 
         #region 库表管理
+        public bool IsTableExist(string tablename)
+        {
+            return _sqlSugar.DbMaintenance.IsAnyTable(tablename, false);
+        }
         public bool CreateDataBase()
         {
             return _sqlSugar.DbMaintenance.CreateDatabase();
