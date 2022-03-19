@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using NET6.Infrastructure.Fleck;
+using Serilog;
 
 namespace NET6.Api.Services
 {
@@ -14,6 +15,8 @@ namespace NET6.Api.Services
         /// <returns></returns>
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            //初始化socket服务器
+            FleckServer.Start();
             Log.Error("执行完毕...");
             return Task.CompletedTask;
         }

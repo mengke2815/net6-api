@@ -54,7 +54,7 @@ namespace NET6.Api.Controllers
         }
 
         #region 校验文件类型
-        string[] badext = { "exe", "msi", "bat", "com", "sys", "aspx", "asax", "ashx" };
+        readonly string[] badext = { "exe", "msi", "bat", "com", "sys", "aspx", "asax", "ashx" };
         private string ProExt(string ext)
         {
             if (ext.IsNull()) return "";
