@@ -35,11 +35,16 @@ var groups = new List<Tuple<string, string>>
 #endregion
 
 #region 注入数据库
+var dbtype = DbType.SqlServer;
+if (_config.GetConnectionString("SugarConnectDBType") == "mysql")
+{
+    dbtype = DbType.MySql;
+}
 builder.Services.AddScoped(options =>
 {
     return new SqlSugarClient(new List<ConnectionConfig>()
     {
-        new ConnectionConfig() { ConfigId = DBEnum.默认数据库, ConnectionString = _config.GetConnectionString("SugarConnectString"), DbType = DbType.MySql, IsAutoCloseConnection = true }
+        new ConnectionConfig() { ConfigId = DBEnum.默认数据库, ConnectionString = _config.GetConnectionString("SugarConnectString"), DbType = dbtype, IsAutoCloseConnection = true }
     });
 });
 #endregion
