@@ -182,12 +182,10 @@ if (!app.Environment.IsDevelopment())
 var path = Path.Combine(basePath, "Files/");
 CommonFun.CreateDir(path);
 //Ìí¼ÓMIMEÖ§³Ö
-var provider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
-{
-    {".fbx", "application/octet-stream"},
-    {".obj", "application/octet-stream"},
-    {".mtl", "application/octet-stream"},
-});
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings.Add(".fbx", "application/octet-stream");
+provider.Mappings.Add(".obj", "application/octet-stream");
+provider.Mappings.Add(".mtl", "application/octet-stream");
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(path),
