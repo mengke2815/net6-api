@@ -17,8 +17,8 @@ namespace NET6.Infrastructure.Repositories
     public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         readonly IHttpContextAccessor _context;
-        public SqlSugarClient _sqlSugar;
-        public BaseRepository(IHttpContextAccessor context, SqlSugarClient sqlSugar)
+        public SqlSugarScope _sqlSugar;
+        public BaseRepository(IHttpContextAccessor context, SqlSugarScope sqlSugar)
         {
             _context = context;
             _sqlSugar = sqlSugar;
@@ -148,9 +148,17 @@ namespace NET6.Infrastructure.Repositories
         {
             return _sqlSugar.Deleteable<TEntity>().Where(wherexp).ExecuteCommandAsync();
         }
+        public virtual Task<int> DeleteAsync(TEntity entity)
+        {
+            return _sqlSugar.Deleteable<TEntity>(entity).ExecuteCommandAsync();
+        }
         public virtual Task<int> UpdateAsync(Expression<Func<TEntity, bool>> wherexp, Expression<Func<TEntity, TEntity>> upexp)
         {
             return _sqlSugar.Updateable<TEntity>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
+        }
+        public virtual Task<int> UpdateAsync(TEntity entity)
+        {
+            return _sqlSugar.Updateable<TEntity>(entity).ExecuteCommandAsync();
         }
         public virtual Task<int> SoftDeleteAsync(string id)
         {
@@ -226,9 +234,17 @@ namespace NET6.Infrastructure.Repositories
         {
             return _sqlSugar.Updateable<T>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
         }
+        public virtual Task<int> UpdateAsync<T>(T entity) where T : EntityBase, new()
+        {
+            return _sqlSugar.Updateable<T>(entity).ExecuteCommandAsync();
+        }
         public virtual Task<int> DeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
         {
             return _sqlSugar.Deleteable<T>().Where(wherexp).ExecuteCommandAsync();
+        }
+        public virtual Task<int> DeleteAsync<T>(T entity) where T : EntityBase, new()
+        {
+            return _sqlSugar.Deleteable<T>(entity).ExecuteCommandAsync();
         }
         public virtual Task<int> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
         {

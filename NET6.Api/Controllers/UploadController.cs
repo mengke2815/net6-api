@@ -29,7 +29,8 @@ namespace NET6.Api.Controllers
             if (files.Count == 0) return Ok(JsonView("请选择文件"));
 
             var domain = _config["Domain"];
-            var dircstr = $"/Files/{path}/{DateTime.Now:yyyyMMdd}/";
+            //var dircstr = $"/Files/{path}/{DateTime.Now:yyyyMMdd}/";
+            var dircstr = $"/Files/{path}/";
             var result = new List<string>();
             foreach (var file in files)
             {

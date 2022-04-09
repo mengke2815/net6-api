@@ -10,7 +10,7 @@ namespace NET6.Infrastructure.Repositories
     /// </summary>
     public class OperationLogRepository : BaseRepository<OperationLog, OperationLogView>
     {
-        public OperationLogRepository(IHttpContextAccessor context, SqlSugarClient sqlSugar) : base(context, sqlSugar)
+        public OperationLogRepository(IHttpContextAccessor context, SqlSugarScope sqlSugar) : base(context, sqlSugar)
         {
 
         }
