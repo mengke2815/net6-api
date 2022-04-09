@@ -1,4 +1,5 @@
-﻿using SqlSugar;
+﻿using NET6.Domain.Enums;
+using SqlSugar;
 
 namespace NET6.Domain.Entities
 {
@@ -6,6 +7,7 @@ namespace NET6.Domain.Entities
     /// 地址
     /// </summary>
     [SugarTable("address")]
+    [Tenant(DBEnum.默认数据库)]
     public class Address : EntityBase
     {
         /// <summary>

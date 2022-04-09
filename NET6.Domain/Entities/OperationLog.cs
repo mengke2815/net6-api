@@ -1,4 +1,5 @@
-﻿using SqlSugar;
+﻿using NET6.Domain.Enums;
+using SqlSugar;
 
 namespace NET6.Domain.Entities
 {
@@ -7,6 +8,7 @@ namespace NET6.Domain.Entities
     /// </summary>
     [SplitTable(SplitType.Month)]
     [SugarTable("operation_log_{year}{month}{day}")]
+    [Tenant(DBEnum.默认数据库)]
     public class OperationLog : EntityBase
     {
         /// <summary>
