@@ -32,7 +32,6 @@ namespace NET6.Api.Controllers
         [ProducesResponseType(typeof(LoginView), StatusCodes.Status200OK)]
         public async Task<IActionResult> LoginAsync(LoginDto dto)
         {
-            throw new NotImplementedException();
             #region 校验用户信息
             var userid = "123";
             var username = "admin";
