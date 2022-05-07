@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace NET6.Infrastructure.Tools
@@ -26,7 +26,11 @@ namespace NET6.Infrastructure.Tools
         }
         public static string ToJson(this object obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            return JsonSerializer.Serialize(obj);
+        }
+        public static T ToObject<T>(this string json)
+        {
+            return JsonSerializer.Deserialize<T>(json);
         }
         public static object GetDefaultVal(string typename)
         {

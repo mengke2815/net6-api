@@ -10,13 +10,12 @@ using NET6.Api.Filters;
 using NET6.Api.Services;
 using NET6.Domain.Enums;
 using NET6.Infrastructure.Tools;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Serilog;
 using SqlSugar;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
@@ -163,28 +162,16 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<LogActionFilter>();
     options.Filters.Add<GlobalExceptionFilter>();
-}).AddNewtonsoftJson(options =>
+}).AddJsonOptions(options =>
 {
-    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); //序列化时key为驼峰样式
-    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
-    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;//忽略循环引用
-    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;//忽略null值
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.Converters.Add(new DatetimeJsonConverter());
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
-//.AddJsonOptions(options =>
-//{
-//    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-//    options.JsonSerializerOptions.Converters.Add(new DatetimeJsonConverter());
-//    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-//});
 
 var app = builder.Build();
 
-//// Configure the HTTP request pipeline.
-//if (!app.Environment.IsDevelopment())
-//{
-//    app.UseExceptionHandler("/Home/Error");
-//}
+// Configure the HTTP request pipeline.
 
 #region 启用静态资源访问
 //创建目录
