@@ -1,13 +1,12 @@
-﻿namespace NET6.Domain.Enums
+﻿namespace NET6.Domain.Enums;
+
+/// <summary>
+/// 缓存枚举
+/// </summary>
+public enum CacheEnum : int
 {
     /// <summary>
-    /// 缓存枚举
+    /// 刷新令牌
     /// </summary>
-    public enum CacheEnum : int
-    {
-        /// <summary>
-        /// 刷新令牌
-        /// </summary>
-        刷新令牌 = 1
-    }
+    刷新令牌 = 1
 }

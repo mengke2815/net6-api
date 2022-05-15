@@ -1,22 +1,3 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using NET6.Api.Filters;
-using NET6.Api.Services;
-using NET6.Domain.Enums;
-using NET6.Infrastructure.Tools;
-using Serilog;
-using SqlSugar;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using System.Reflection;
-using System.Text;
-using System.Text.Json.Serialization;
-
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
