@@ -32,6 +32,10 @@ builder.Services.AddScoped(options =>
 
 #region ³õÊ¼»¯Redis
 //RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
+//builder.Services.AddSingleton(options =>
+//{
+//    return new RedisClient(_config.GetConnectionString("CSRedisConnectString"));
+//});
 #endregion
 
 #region Ìí¼Óswagger×¢ÊÍ
