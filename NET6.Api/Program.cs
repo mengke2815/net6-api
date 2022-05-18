@@ -35,41 +35,44 @@ builder.Services.AddScoped(options =>
 #endregion
 
 #region 添加swagger注释
-builder.Services.AddSwaggerGen(a =>
+if (_config["UseSwagger"].ToBool())
 {
-    a.SwaggerDoc("v1", new OpenApiInfo
+    builder.Services.AddSwaggerGen(a =>
     {
-        Version = "v1",
-        Title = "Api"
-    });
-    foreach (var item in groups)
-    {
-        a.SwaggerDoc(item.Item1, new OpenApiInfo { Version = item.Item1, Title = item.Item2, Description = "" });
-    }
-    a.IncludeXmlComments(Path.Combine(basePath, "NET6.Api.xml"), true);
-    a.IncludeXmlComments(Path.Combine(basePath, "NET6.Domain.xml"), true);
-    a.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "Value: Bearer {token}",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-    a.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-      {
-        new OpenApiSecurityScheme
+        a.SwaggerDoc("v1", new OpenApiInfo
         {
-          Reference = new OpenApiReference
-          {
-            Type = ReferenceType.SecurityScheme,
-            Id = "Bearer"
-          },Scheme = "oauth2",Name = "Bearer",In = ParameterLocation.Header,
-        },new List<string>()
-      }
+            Version = "v1",
+            Title = "Api",
+            Description = "Api接口文档"
+        });
+        foreach (var item in groups)
+        {
+            a.SwaggerDoc(item.Item1, new OpenApiInfo { Version = item.Item1, Title = item.Item2, Description = $"{item.Item2}接口文档" });
+        }
+        a.IncludeXmlComments(Path.Combine(basePath, "NET6.Api.xml"), true);
+        a.IncludeXmlComments(Path.Combine(basePath, "NET6.Domain.xml"), true);
+        a.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Description = "Value: Bearer {token}",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        });
+        a.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        {{
+            new OpenApiSecurityScheme
+            {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            },Scheme = "oauth2",Name = "Bearer",In = ParameterLocation.Header,
+            },new List<string>()
+            }
+        });
     });
-});
+}
 #endregion
 
 #region 添加身份验证
@@ -184,19 +187,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 #region 启用swaggerUI
-app.UseSwagger();
-app.UseSwaggerUI(a =>
+if (_config["UseSwagger"].ToBool())
 {
-    a.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
-    foreach (var item in groups)
+    app.UseSwagger();
+    app.UseSwaggerUI(a =>
     {
-        a.SwaggerEndpoint($"/swagger/{item.Item1}/swagger.json", item.Item2);
-    }
-    a.RoutePrefix = string.Empty;
-    a.DocExpansion(DocExpansion.None);
-    a.DefaultModelsExpandDepth(-1);//不显示Models
-});
-
+        a.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+        foreach (var item in groups)
+        {
+            a.SwaggerEndpoint($"/swagger/{item.Item1}/swagger.json", item.Item2);
+        }
+        a.RoutePrefix = string.Empty;
+        a.DocExpansion(DocExpansion.None);
+        a.DefaultModelsExpandDepth(-1);//不显示Models
+    });
+}
 #endregion
 
 app.MapControllerRoute(

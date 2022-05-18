@@ -71,6 +71,14 @@ public static class CommonFun
             CoverNull(model);
         }
     }
+    public static bool ToBool(this object thisValue, bool errorvalue = false)
+    {
+        if (thisValue != null && thisValue != DBNull.Value && bool.TryParse(thisValue.ToString(), out bool reval))
+        {
+            return reval;
+        }
+        return errorvalue;
+    }
 
     #region 文件操作
     public static FileInfo[] GetFiles(string directoryPath)
