@@ -36,8 +36,9 @@
 		<PackageReference Include="FreeRedis" Version="0.5.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
 		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="SqlSugarCore" Version="5.0.8.1" />
+		<PackageReference Include="SqlSugarCore" Version="5.0.8.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
 		<PackageReference Include="UAParser" Version="3.1.47" />
 	</ItemGroup>
