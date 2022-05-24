@@ -5,7 +5,7 @@
 /// </summary>
 public class LoginSubscriber : IEventSubscriber
 {
-    [EventSubscribe("Login")]
+    [EventSubscribe(SubscribeEnum.登录事件)]
     public async Task LoginEvent(EventHandlerExecutingContext context)
     {
         Log.Error($"事件总线：{context.Source.Payload}");

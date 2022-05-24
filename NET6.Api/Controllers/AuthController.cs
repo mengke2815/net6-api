@@ -24,7 +24,7 @@ public class AuthController : BaseController
     public async Task<IActionResult> LoginAsync(LoginDto dto)
     {
         #region 事件总线发布
-        await _eventPublisher.PublishAsync(new ChannelEventSource("Login", "这里是用户登录消息"));
+        await _eventPublisher.PublishAsync(new ChannelEventSource(SubscribeEnum.登录事件, "这里是用户登录消息"));
         #endregion
         #region 校验用户信息
         var userid = "123";
