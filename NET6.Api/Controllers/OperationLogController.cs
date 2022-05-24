@@ -32,6 +32,6 @@ public class OperationLogController : BaseController
         }
         RefAsync<int> count = 0;
         var list = await query.SplitTable(a => a.InTableNames(tablename)).OrderBy(a => a.CreateTime, OrderByType.Desc).ToPageListAsync(page, size, count);
-        return Ok(JsonView(list, count));
+        return JsonView(list, count);
     }
 }

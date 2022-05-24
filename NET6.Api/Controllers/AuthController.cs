@@ -48,7 +48,7 @@ public class AuthController : BaseController
             expires: view.Expires,
             signingCredentials: creds);
         view.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
-        return Ok(JsonView(view));
+        return JsonView(view);
         #endregion
     }
 
@@ -68,8 +68,8 @@ public class AuthController : BaseController
             var userid = jwtToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             var username = jwtToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Name)?.Value;
             var refreshtoken = CacheHelper.Get<string>($"{CacheEnum.刷新令牌}_{userid}");
-            if (refreshtoken == null) return Ok(JsonView("未找到该刷新令牌"));
-            if (refreshtoken != dto.RefreshToken) return Ok(JsonView("刷新令牌不正确"));
+            if (refreshtoken == null) return JsonView("未找到该刷新令牌");
+            if (refreshtoken != dto.RefreshToken) return JsonView("刷新令牌不正确");
             #region 签发JWT
             //生成一个新的刷新令牌
             refreshtoken = CommonFun.GUID;
@@ -88,12 +88,12 @@ public class AuthController : BaseController
                 expires: view.Expires,
                 signingCredentials: creds);
             view.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
-            return Ok(JsonView(view));
+            return JsonView(view);
             #endregion
         }
         catch (Exception)
         {
-            return Ok(JsonView("访问令牌解析失败"));
+            return JsonView("访问令牌解析失败");
         }
     }
 }

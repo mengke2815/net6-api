@@ -21,8 +21,8 @@ public class AddressController : BaseController
     public async Task<IActionResult> DefaultAsync()
     {
         var model = await _addressRep.GetDtoAsync(a => a.IsDefault && a.UserId == CurrentUserId);
-        if (model == null) return Ok(JsonView("未找到默认地址"));
-        return Ok(JsonView(model));
+        if (model == null) return JsonView("未找到默认地址");
+        return JsonView(model);
     }
 
     /// <summary>
@@ -35,8 +35,8 @@ public class AddressController : BaseController
     public async Task<IActionResult> GetAsync(string id)
     {
         var model = await _addressRep.GetDtoAsync(a => a.Id == id);
-        if (model == null) return Ok(JsonView("未找到数据"));
-        return Ok(JsonView(model));
+        if (model == null) return JsonView("未找到数据");
+        return JsonView(model);
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public class AddressController : BaseController
         }
         RefAsync<int> count = 0;
         var list = await query.OrderBy(a => a.IsDefault).ToPageListAsync(page, size, count);
-        return Ok(JsonView(list, count));
+        return JsonView(list, count);
     }
 
     /// <summary>
@@ -85,14 +85,14 @@ public class AddressController : BaseController
                 IsDefault = dto.IsDefault
             });
             _addressRep.CommitTran();
-            if (result > 0) return Ok(JsonView(true));
-            return Ok(JsonView(false));
+            if (result > 0) return JsonView(true);
+            return JsonView(false);
         }
         catch (Exception e)
         {
             _addressRep.RollbackTran();
             Logs("添加异常：" + e.Message);
-            return Ok(JsonView("添加异常"));
+            return JsonView("添加异常");
         }
     }
 
@@ -121,14 +121,14 @@ public class AddressController : BaseController
                 IsDefault = dto.IsDefault
             });
             _addressRep.CommitTran();
-            if (result > 0) return Ok(JsonView(true));
-            return Ok(JsonView(false));
+            if (result > 0) return JsonView(true);
+            return JsonView(false);
         }
         catch (Exception e)
         {
             _addressRep.RollbackTran();
             Logs("修改异常：" + e.Message);
-            return Ok(JsonView("修改异常"));
+            return JsonView("修改异常");
         }
     }
 
@@ -147,14 +147,14 @@ public class AddressController : BaseController
             _addressRep.BeginTran();
             var result = await _addressRep.SoftDeleteAsync(a => a.Id == id);
             _addressRep.CommitTran();
-            if (result > 0) return Ok(JsonView(true));
-            return Ok(JsonView(false));
+            if (result > 0) return JsonView(true);
+            return JsonView(false);
         }
         catch (Exception e)
         {
             _addressRep.RollbackTran();
             Logs("删除异常：" + e.Message);
-            return Ok(JsonView("删除异常"));
+            return JsonView("删除异常");
         }
     }
 

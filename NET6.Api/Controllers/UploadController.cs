@@ -23,7 +23,7 @@ public class UploadController : BaseController
     public async Task<IActionResult> FileUpload(string path = "default")
     {
         var files = Request.Form.Files;
-        if (files.Count == 0) return Ok(JsonView("请选择文件"));
+        if (files.Count == 0) return JsonView("请选择文件");
 
         var domain = _config["Domain"];
         //var dircstr = $"/Files/{path}/{DateTime.Now:yyyyMMdd}/";
@@ -48,7 +48,7 @@ public class UploadController : BaseController
             }
             result.Add(domain + fileloadname);
         }
-        return Ok(JsonView(result));
+        return JsonView(result);
     }
 
     #region 校验文件类型
