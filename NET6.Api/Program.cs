@@ -1,3 +1,5 @@
+using NET6.Api.Subscribers;
+
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
@@ -135,6 +137,17 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 
 #region 注入后台服务
 builder.Services.AddHostedService<TimerService>();
+#endregion
+
+#region 注入事件总线
+builder.Services.AddEventBus(builder =>
+{
+    builder.AddSubscriber<LoginSubscriber>();
+    builder.UnobservedTaskExceptionHandler = (obj, args) =>
+    {
+        Log.Error($"事件总线异常：{args.Exception}");
+    };
+});
 #endregion
 
 #region 注入系统缓存
