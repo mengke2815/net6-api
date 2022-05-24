@@ -34,10 +34,6 @@ builder.Services.AddScoped(options =>
 
 #region 初始化Redis
 //RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
-//builder.Services.AddSingleton(options =>
-//{
-//    return new RedisClient(_config.GetConnectionString("CSRedisConnectString"));
-//});
 #endregion
 
 #region 添加swagger注释
@@ -142,6 +138,7 @@ builder.Services.AddHostedService<TimerService>();
 #region 注入事件总线
 builder.Services.AddEventBus(builder =>
 {
+    builder.ChannelCapacity = 5000;
     builder.AddSubscriber<LoginSubscriber>();
     builder.UnobservedTaskExceptionHandler = (obj, args) =>
     {
