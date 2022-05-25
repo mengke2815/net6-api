@@ -9,24 +9,26 @@ public class GlobalExceptionFilter : IExceptionFilter
     }
     public void OnException(ExceptionContext context)
     {
-        if (!context.ExceptionHandled)//如果异常没有处理
+        if (!context.ExceptionHandled)
         {
             var result = new JsonView
             {
-                Code = 500,
+                Code = (int)HttpStatusCode.InternalServerError,
                 Msg = "服务器发生未处理的异常"
             };
-
             if (hostEnvironment.IsDevelopment())
             {
                 result.Msg += "：" + context.Exception.Message;
                 result.Data = context.Exception.StackTrace;
             }
-
-            Log.Error(result.ToJson());
-
-            context.Result = new JsonResult(result);
-            context.ExceptionHandled = true;//异常已处理
+            context.Result = new ContentResult
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError,
+                ContentType = "application/json;charset=utf-8",
+                Content = result.ToJson()
+            };
+            Log.Error($"服务器内部错误：{result.ToJson()}");
+            context.ExceptionHandled = true;
         }
     }
 }
