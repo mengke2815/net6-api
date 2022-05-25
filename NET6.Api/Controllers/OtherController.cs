@@ -39,7 +39,7 @@ public class OtherController : BaseController
         //开始模拟并发
         Parallel.For(0, 105, (i) =>
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 using var mylock = RedisHelper.Lock("分布式锁名称", 5);
                 if (mylock == null) Logs("获取分布式锁失败...");
@@ -50,6 +50,8 @@ public class OtherController : BaseController
                     count--;
                     RedisHelper.Set("StockCount", count);
                     Logs($"第{i + 1}个人已抢到，当前剩余：{RedisHelper.Get<int>("StockCount")}件");
+                    //下单推入消息总线
+                    await _eventPublisher.PublishDelayAsync(new ChannelEventSource(SubscribeEnum.下单事件, $"用户{i + 1}的订单开始处理..."), 2500);
                 }
                 else
                 {

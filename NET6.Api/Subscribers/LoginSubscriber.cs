@@ -11,4 +11,11 @@ public class LoginSubscriber : IEventSubscriber
         Log.Error($"事件总线：{context.Source.Payload}");
         await Task.CompletedTask;
     }
+
+    [EventSubscribe(SubscribeEnum.下单事件)]
+    public async Task OrderEvent(EventHandlerExecutingContext context)
+    {
+        Log.Error($"事件总线：{context.Source.Payload}");
+        await Task.CompletedTask;
+    }
 }
