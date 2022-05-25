@@ -1,5 +1,6 @@
 ﻿global using Autofac;
 global using Autofac.Extensions.DependencyInjection;
+global using CSRedis;
 global using Jaina.EventBus;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;

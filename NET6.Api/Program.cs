@@ -33,7 +33,7 @@ builder.Services.AddScoped(options =>
 #endregion
 
 #region ³õÊ¼»¯Redis
-//RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
+RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
 #endregion
 
 #region Ìí¼Óswagger×¢ÊÍ

@@ -6,11 +6,9 @@
 public class AuthController : BaseController
 {
     readonly IConfiguration _config;
-    readonly IEventPublisher _eventPublisher;
-    public AuthController(IConfiguration config, IEventPublisher eventPublisher)
+    public AuthController(IConfiguration config)
     {
         _config = config;
-        _eventPublisher = eventPublisher;
     }
 
     /// <summary>
@@ -23,9 +21,6 @@ public class AuthController : BaseController
     [ProducesResponseType(typeof(LoginView), StatusCodes.Status200OK)]
     public async Task<IActionResult> LoginAsync(LoginDto dto)
     {
-        #region 事件总线发布
-        await _eventPublisher.PublishAsync(new ChannelEventSource(SubscribeEnum.登录事件, "这里是用户登录消息"));
-        #endregion
         #region 校验用户信息
         var userid = "123";
         var username = "admin";
