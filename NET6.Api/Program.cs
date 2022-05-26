@@ -144,6 +144,10 @@ builder.Services.AddEventBus(builder =>
     {
         Log.Error($"事件总线异常：{args.Exception}");
     };
+    //builder.ReplaceStorer(serviceProvider =>
+    //{
+    //    return new RedisEventSourceStorer();
+    //});
 });
 #endregion
 

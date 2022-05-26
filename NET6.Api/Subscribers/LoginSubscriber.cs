@@ -19,3 +19,38 @@ public class LoginSubscriber : IEventSubscriber
         await Task.CompletedTask;
     }
 }
+
+public class RedisEventSource : IEventSource
+{
+    /// <summary>
+    /// 事件 Id
+    /// </summary>
+    public string EventId { get; set; }
+    /// <summary>
+    /// 事件承载（携带）数据
+    /// </summary>
+    public object Payload { get; set; }
+    /// <summary>
+    /// 取消任务 Token
+    /// </summary>
+    /// <remarks>用于取消本次消息处理</remarks>
+    public CancellationToken CancellationToken { get; set; }
+    /// <summary>
+    /// 事件创建时间
+    /// </summary>
+    public DateTime CreatedTime { get; set; }
+}
+public class RedisEventSourceStorer : IEventSourceStorer
+{
+    readonly SemaphoreSlim _semaphore = new(0);
+    public async ValueTask WriteAsync(IEventSource eventSource, CancellationToken cancellationToken)
+    {
+        await RedisHelper.LPushAsync("mychccc", eventSource);
+        _semaphore.Release();
+    }
+    public async ValueTask<IEventSource> ReadAsync(CancellationToken cancellationToken)
+    {
+        await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return await RedisHelper.RPopAsync<RedisEventSource>("mychccc");
+    }
+}
