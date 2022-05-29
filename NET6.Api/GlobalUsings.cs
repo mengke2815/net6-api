@@ -15,6 +15,7 @@ global using Microsoft.OpenApi.Models;
 global using NET6.Api.Attributes;
 global using NET6.Api.Filters;
 global using NET6.Api.Services;
+global using NET6.Api.Subscribers;
 global using NET6.Domain.Dtos;
 global using NET6.Domain.Entities;
 global using NET6.Domain.Enums;

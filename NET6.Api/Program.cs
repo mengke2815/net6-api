@@ -1,5 +1,3 @@
-using NET6.Api.Subscribers;
-
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
