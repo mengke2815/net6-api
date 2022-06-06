@@ -21,7 +21,7 @@ if (_config.GetConnectionString("SugarConnectDBType") == "mysql")
 {
     dbtype = DbType.MySql;
 }
-builder.Services.AddScoped(options =>
+builder.Services.AddSingleton(options =>
 {
     return new SqlSugarScope(new List<ConnectionConfig>()
     {
