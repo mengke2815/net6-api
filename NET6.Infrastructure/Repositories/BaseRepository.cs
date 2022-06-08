@@ -9,12 +9,12 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
 {
     readonly IHttpContextAccessor _context;
     public SqlSugarScope _sqlSugar;
-    public SqlSugarProvider _sqlSugarProvider;
+    public SqlSugarScopeProvider _sqlSugarProvider;
     public BaseRepository(IHttpContextAccessor context, SqlSugarScope sqlSugar)
     {
         _context = context;
         _sqlSugar = sqlSugar;
-        _sqlSugarProvider = sqlSugar.GetConnectionWithAttr<TEntity>();
+        _sqlSugarProvider = sqlSugar.GetConnectionScopeWithAttr<TEntity>();
     }
 
     #region 多租户
@@ -24,37 +24,37 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     /// <param name="db"></param>
     public void ChangeDataBase(DBEnum db)
     {
-        _sqlSugarProvider.AsTenant().ChangeDatabase(db);
+        _sqlSugar.ChangeDatabase(db);
     }
     #endregion
 
     #region 原生Sql
     public virtual Task<int> ExecuteCommandAsync(string sql)
     {
-        return _sqlSugarProvider.Ado.ExecuteCommandAsync(sql);
+        return _sqlSugar.Ado.ExecuteCommandAsync(sql);
     }
     public virtual Task<DataTable> GetDataTableAsync(string sql)
     {
-        return _sqlSugarProvider.Ado.GetDataTableAsync(sql);
+        return _sqlSugar.Ado.GetDataTableAsync(sql);
     }
     public virtual Task<object> GetScalarAsync(string sql)
     {
-        return _sqlSugarProvider.Ado.GetScalarAsync(sql);
+        return _sqlSugar.Ado.GetScalarAsync(sql);
     }
     #endregion
 
     #region 事务操作
     public void BeginTran()
     {
-        _sqlSugarProvider.AsTenant().BeginTran();
+        _sqlSugar.BeginTran();
     }
     public void CommitTran()
     {
-        _sqlSugarProvider.AsTenant().CommitTran();
+        _sqlSugar.CommitTran();
     }
     public void RollbackTran()
     {
-        _sqlSugarProvider.AsTenant().RollbackTran();
+        _sqlSugar.RollbackTran();
     }
     #endregion
 
