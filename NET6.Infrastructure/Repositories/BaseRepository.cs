@@ -405,4 +405,34 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         return provider.SplitHelper<T>().GetTableName(datetime);
     }
     #endregion
+
+    #region 大数据写入
+    public virtual Task<int> AddBulkAsync(List<TEntity> entities)
+    {
+        return _sqlSugarProvider.Fastest<TEntity>().BulkCopyAsync(entities);
+    }
+    public virtual Task<int> UpdateBulkAsync(List<TEntity> entities)
+    {
+        return _sqlSugarProvider.Fastest<TEntity>().BulkUpdateAsync(entities);
+    }
+    public virtual Task<int> AddBulkAsync<T>(List<T> entities) where T : EntityBase, new()
+    {
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
+        return provider.Fastest<T>().BulkCopyAsync(entities);
+    }
+    public virtual Task<int> UpdateBulkAsync<T>(List<T> entities) where T : EntityBase, new()
+    {
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
+        return provider.Fastest<T>().BulkUpdateAsync(entities);
+    }
+    public virtual Task<int> AddSplitTableBulkAsync(List<TEntity> entities)
+    {
+        return _sqlSugarProvider.Fastest<TEntity>().SplitTable().BulkCopyAsync(entities);
+    }
+    public virtual Task<int> AddSplitTableBulkAsync<T>(List<T> entities) where T : EntityBase, new()
+    {
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
+        return provider.Fastest<T>().SplitTable().BulkCopyAsync(entities);
+    }
+    #endregion
 }
