@@ -23,7 +23,7 @@ public class TimerService : BackgroundService
             var dbexist = _operationlogRep.CreateDataBase();
             if (dbexist)
             {
-                var exist = _operationlogRep.IsTableExist("address");
+                var exist = _operationlogRep.IsTableExist<Address>();
                 if (!exist)
                 {
                     _operationlogRep.CreateTable(new Type[]

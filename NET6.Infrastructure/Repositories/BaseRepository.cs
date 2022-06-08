@@ -59,33 +59,100 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     #endregion
 
     #region 库表管理
-    public bool IsTableExist(string tablename)
+    public bool IsTableExist()
     {
-        return _sqlSugarProvider.DbMaintenance.IsAnyTable(tablename, false);
+        var table = typeof(TEntity).GetCustomAttribute<SugarTable>();
+        return _sqlSugarProvider.DbMaintenance.IsAnyTable(table.TableName, false);
+    }
+    public bool IsTableExist<T>()
+    {
+        var tenant = typeof(T).GetCustomAttribute<TenantAttribute>();
+        if (tenant != null)
+        {
+            _sqlSugar.ChangeDatabase(tenant.configId);
+        }
+        else
+        {
+            _sqlSugar.ChangeDatabase(DBEnum.默认数据库);
+        }
+        var table = typeof(T).GetCustomAttribute<SugarTable>();
+        return _sqlSugar.DbMaintenance.IsAnyTable(table.TableName, false);
     }
     public bool CreateDataBase()
     {
         return _sqlSugarProvider.DbMaintenance.CreateDatabase();
     }
-    public bool CopyTable(string oldname, string newname)
+    public bool CreateDataBase<T>()
     {
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
+        return provider.DbMaintenance.CreateDatabase();
+    }
+    public bool CopyTable(string newname)
+    {
+        var table = typeof(TEntity).GetCustomAttribute<SugarTable>();
         if (!_sqlSugarProvider.DbMaintenance.IsAnyTable(newname, false))
         {
-            return _sqlSugarProvider.DbMaintenance.BackupTable(oldname, newname, 0);
+            return _sqlSugarProvider.DbMaintenance.BackupTable(table.TableName, newname, 0);
         }
         return false;
     }
-    public bool TruncateTable(string tablename)
+    public bool CopyTable<T>(string newname)
     {
-        return _sqlSugarProvider.DbMaintenance.TruncateTable(tablename);
+        var tenant = typeof(T).GetCustomAttribute<TenantAttribute>();
+        if (tenant != null)
+        {
+            _sqlSugar.ChangeDatabase(tenant.configId);
+        }
+        else
+        {
+            _sqlSugar.ChangeDatabase(DBEnum.默认数据库);
+        }
+        var table = typeof(T).GetCustomAttribute<SugarTable>();
+        if (!_sqlSugar.DbMaintenance.IsAnyTable(newname, false))
+        {
+            return _sqlSugar.DbMaintenance.BackupTable(table.TableName, newname, 0);
+        }
+        return false;
     }
-    public void CreateTable(Type entityType)
+    public bool TruncateTable()
     {
-        _sqlSugarProvider.CodeFirst.SetStringDefaultLength(200).BackupTable().InitTables(entityType);
+        var table = typeof(TEntity).GetCustomAttribute<SugarTable>();
+        return _sqlSugarProvider.DbMaintenance.TruncateTable(table.TableName);
+    }
+    public bool TruncateTable<T>()
+    {
+        var tenant = typeof(T).GetCustomAttribute<TenantAttribute>();
+        if (tenant != null)
+        {
+            _sqlSugar.ChangeDatabase(tenant.configId);
+        }
+        else
+        {
+            _sqlSugar.ChangeDatabase(DBEnum.默认数据库);
+        }
+        var table = typeof(T).GetCustomAttribute<SugarTable>();
+        return _sqlSugar.DbMaintenance.TruncateTable(table.TableName);
+    }
+    public void CreateTable<T>()
+    {
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
+        provider.CodeFirst.SetStringDefaultLength(200).BackupTable().InitTables(typeof(T));
     }
     public void CreateTable(Type[] entityTypes)
     {
-        _sqlSugarProvider.CodeFirst.SetStringDefaultLength(200).BackupTable().InitTables(entityTypes);
+        foreach (var entity in entityTypes)
+        {
+            var attr = entity.GetCustomAttribute<TenantAttribute>();
+            if (attr != null)
+            {
+                _sqlSugar.ChangeDatabase(attr.configId);
+            }
+            else
+            {
+                _sqlSugar.ChangeDatabase(DBEnum.默认数据库);
+            }
+            _sqlSugar.CodeFirst.SetStringDefaultLength(200).BackupTable().InitTables(entity);
+        }
     }
     #endregion
 
@@ -178,44 +245,44 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     #region 泛型CRUD
     public virtual Task<bool> AnyAsync<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Queryable<T>().AnyAsync(exp);
     }
     public virtual ISugarQueryable<T> Query<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Queryable<T>().Where(a => !a.IsDeleted).Where(exp);
     }
     public virtual ISugarQueryable<T> Query<T>() where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Queryable<T>().Where(a => !a.IsDeleted);
     }
     public virtual Task<Dto> GetDtoAsync<T, Dto>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Queryable<T>().Where(a => !a.IsDeleted).Where(exp).Select<Dto>().FirstAsync();
     }
     public virtual ISugarQueryable<Dto> QueryDto<T, Dto>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Queryable<T>().Where(a => !a.IsDeleted).Where(exp).Select<Dto>();
     }
     public virtual ISugarQueryable<Dto> QueryDto<T, Dto>() where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Queryable<T>().Where(a => !a.IsDeleted).Select<Dto>();
     }
     public virtual Task<int> AddAsync<T>(T entity) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         CommonFun.CoverNull(entity);
         return provider.Insertable(entity).ExecuteCommandAsync();
     }
     public virtual Task<int> AddAsync<T>(List<T> entitys) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         foreach (var item in entitys)
         {
             item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -225,37 +292,37 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<T> GetAsync<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Queryable<T>().Where(exp).FirstAsync();
     }
     public virtual Task<T> GetAsync<T>(string id) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Queryable<T>().InSingleAsync(id);
     }
     public virtual Task<int> UpdateAsync<T>(Expression<Func<T, bool>> wherexp, Expression<Func<T, T>> upexp) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Updateable<T>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
     }
     public virtual Task<int> UpdateAsync<T>(T entity) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Updateable<T>(entity).ExecuteCommandAsync();
     }
     public virtual Task<int> DeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Deleteable<T>().Where(wherexp).ExecuteCommandAsync();
     }
     public virtual Task<int> DeleteAsync<T>(T entity) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Deleteable<T>(entity).ExecuteCommandAsync();
     }
     public virtual Task<int> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return provider.Updateable<T>().Where(a => a.Id.Equals(id)).SetColumns(a => new T()
         {
@@ -266,7 +333,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<int> SoftDeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return provider.Updateable<T>().Where(wherexp).SetColumns(a => new T()
         {
@@ -299,14 +366,14 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<int> AddSplitTableAsync<T>(T entity) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         CommonFun.CoverNull(entity);
         return provider.Insertable(entity).SplitTable().ExecuteCommandAsync();
     }
     public virtual Task<int> AddSplitTableAsync<T>(List<T> entitys) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         foreach (var item in entitys)
         {
             item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -316,7 +383,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual string GetTableName<T>(DateTime datetime) where T : EntityBase, new()
     {
-        var provider = _sqlSugar.GetConnectionWithAttr<T>();
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.SplitHelper<T>().GetTableName(datetime);
     }
     #endregion
