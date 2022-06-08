@@ -187,14 +187,14 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         CommonFun.CoverNull(entity);
         return _sqlSugarProvider.Insertable(entity).ExecuteCommandAsync();
     }
-    public virtual Task<int> AddAsync(List<TEntity> entitys)
+    public virtual Task<int> AddAsync(List<TEntity> entities)
     {
-        foreach (var item in entitys)
+        foreach (var item in entities)
         {
             item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
-        CommonFun.CoverNull(entitys);
-        return _sqlSugarProvider.Insertable(entitys).ExecuteCommandAsync();
+        CommonFun.CoverNull(entities);
+        return _sqlSugarProvider.Insertable(entities).ExecuteCommandAsync();
     }
     public virtual Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> exp)
     {
@@ -212,6 +212,10 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         return _sqlSugarProvider.Deleteable<TEntity>(entity).ExecuteCommandAsync();
     }
+    public virtual Task<int> DeleteAsync(List<TEntity> entities)
+    {
+        return _sqlSugarProvider.Deleteable<TEntity>(entities).ExecuteCommandAsync();
+    }
     public virtual Task<int> UpdateAsync(Expression<Func<TEntity, bool>> wherexp, Expression<Func<TEntity, TEntity>> upexp)
     {
         return _sqlSugarProvider.Updateable<TEntity>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
@@ -219,6 +223,10 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     public virtual Task<int> UpdateAsync(TEntity entity)
     {
         return _sqlSugarProvider.Updateable<TEntity>(entity).ExecuteCommandAsync();
+    }
+    public virtual Task<int> UpdateAsync(List<TEntity> entities)
+    {
+        return _sqlSugarProvider.Updateable<TEntity>(entities).ExecuteCommandAsync();
     }
     public virtual Task<int> SoftDeleteAsync(string id)
     {
@@ -280,15 +288,15 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         CommonFun.CoverNull(entity);
         return provider.Insertable(entity).ExecuteCommandAsync();
     }
-    public virtual Task<int> AddAsync<T>(List<T> entitys) where T : EntityBase, new()
+    public virtual Task<int> AddAsync<T>(List<T> entities) where T : EntityBase, new()
     {
         var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
-        foreach (var item in entitys)
+        foreach (var item in entities)
         {
             item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
-        CommonFun.CoverNull(entitys);
-        return provider.Insertable(entitys).ExecuteCommandAsync();
+        CommonFun.CoverNull(entities);
+        return provider.Insertable(entities).ExecuteCommandAsync();
     }
     public virtual Task<T> GetAsync<T>(Expression<Func<T, bool>> exp) where T : EntityBase, new()
     {
@@ -310,6 +318,11 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Updateable<T>(entity).ExecuteCommandAsync();
     }
+    public virtual Task<int> UpdateAsync<T>(List<T> entities) where T : EntityBase, new()
+    {
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
+        return provider.Updateable<T>(entities).ExecuteCommandAsync();
+    }
     public virtual Task<int> DeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
     {
         var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
@@ -319,6 +332,11 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
         return provider.Deleteable<T>(entity).ExecuteCommandAsync();
+    }
+    public virtual Task<int> DeleteAsync<T>(List<T> entities) where T : EntityBase, new()
+    {
+        var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
+        return provider.Deleteable<T>(entities).ExecuteCommandAsync();
     }
     public virtual Task<int> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
     {
@@ -351,14 +369,14 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         CommonFun.CoverNull(entity);
         return _sqlSugarProvider.Insertable(entity).SplitTable().ExecuteCommandAsync();
     }
-    public virtual Task<int> AddSplitTableAsync(List<TEntity> entitys)
+    public virtual Task<int> AddSplitTableAsync(List<TEntity> entities)
     {
-        foreach (var item in entitys)
+        foreach (var item in entities)
         {
             item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
-        CommonFun.CoverNull(entitys);
-        return _sqlSugarProvider.Insertable(entitys).SplitTable().ExecuteCommandAsync();
+        CommonFun.CoverNull(entities);
+        return _sqlSugarProvider.Insertable(entities).SplitTable().ExecuteCommandAsync();
     }
     public virtual string GetTableName(DateTime datetime)
     {
@@ -371,15 +389,15 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         CommonFun.CoverNull(entity);
         return provider.Insertable(entity).SplitTable().ExecuteCommandAsync();
     }
-    public virtual Task<int> AddSplitTableAsync<T>(List<T> entitys) where T : EntityBase, new()
+    public virtual Task<int> AddSplitTableAsync<T>(List<T> entities) where T : EntityBase, new()
     {
         var provider = _sqlSugar.GetConnectionScopeWithAttr<T>();
-        foreach (var item in entitys)
+        foreach (var item in entities)
         {
             item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
-        CommonFun.CoverNull(entitys);
-        return provider.Insertable(entitys).SplitTable().ExecuteCommandAsync();
+        CommonFun.CoverNull(entities);
+        return provider.Insertable(entities).SplitTable().ExecuteCommandAsync();
     }
     public virtual string GetTableName<T>(DateTime datetime) where T : EntityBase, new()
     {
