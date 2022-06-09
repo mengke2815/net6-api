@@ -132,7 +132,7 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 #region 初始化AutoMapper 自动映射
 var serviceAssembly = Assembly.Load("NET6.Domain");
 builder.Services.AddAutoMapper(serviceAssembly);
-#endregion AutoMapper 自动映射
+#endregion
 
 #region 注入后台服务
 builder.Services.AddHostedService<TimerService>();
