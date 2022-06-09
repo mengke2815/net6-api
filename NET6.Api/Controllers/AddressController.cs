@@ -6,9 +6,11 @@
 [Route("address")]
 public class AddressController : BaseController
 {
+    readonly IMapper _mapper;
     readonly AddressRepository _addressRep;
-    public AddressController(AddressRepository addressRep)
+    public AddressController(IMapper mapper, AddressRepository addressRep)
     {
+        _mapper = mapper;
         _addressRep = addressRep;
     }
 
@@ -71,19 +73,10 @@ public class AddressController : BaseController
     {
         try
         {
+            var _model = _mapper.Map<Address>(dto);
             //开启事务
             _addressRep.BeginTran();
-            var result = await _addressRep.AddAsync(new Address
-            {
-                UserId = CurrentUserId,
-                Name = dto.Name,
-                Phone = dto.Phone,
-                Province = dto.Province,
-                City = dto.City,
-                Area = dto.Area,
-                Detail = dto.Detail,
-                IsDefault = dto.IsDefault
-            });
+            var result = await _addressRep.AddAsync(_model);
             _addressRep.CommitTran();
             if (result > 0) return JsonView(true);
             return JsonView(false);

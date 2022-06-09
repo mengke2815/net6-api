@@ -6,9 +6,11 @@
 [Route("operationlog")]
 public class OperationLogController : BaseController
 {
+    readonly IMapper _mapper;
     readonly OperationLogRepository _operationlogRep;
-    public OperationLogController(OperationLogRepository operationlogRep)
+    public OperationLogController(IMapper mapper, OperationLogRepository operationlogRep)
     {
+        _mapper = mapper;
         _operationlogRep = operationlogRep;
     }
 
@@ -32,6 +34,7 @@ public class OperationLogController : BaseController
         }
         RefAsync<int> count = 0;
         var list = await query.SplitTable(a => a.InTableNames(tablename)).OrderBy(a => a.CreateTime, OrderByType.Desc).ToPageListAsync(page, size, count);
-        return JsonView(list, count);
+        var result = _mapper.Map<List<OperationLogView>>(list);
+        return JsonView(result, count);
     }
 }

@@ -120,7 +120,7 @@ builder.Services.Configure<KestrelServerOptions>(a => a.AllowSynchronousIO = tru
                 .Configure<IISServerOptions>(a => a.AllowSynchronousIO = true);
 #endregion
 
-#region 初始化Autofac，注入程序集
+#region 初始化Autofac 注入程序集
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
@@ -128,6 +128,11 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
     builder.RegisterAssemblyTypes(assembly).Where(a => a.Name.EndsWith("Repository")).AsSelf();
 });
 #endregion
+
+#region 初始化AutoMapper 自动映射
+var serviceAssembly = Assembly.Load("NET6.Domain");
+builder.Services.AddAutoMapper(serviceAssembly);
+#endregion AutoMapper 自动映射
 
 #region 注入后台服务
 builder.Services.AddHostedService<TimerService>();

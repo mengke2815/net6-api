@@ -32,6 +32,8 @@
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.4.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="AutoMapper" Version="11.0.1" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 		<PackageReference Include="CSRedisCore" Version="3.8.2" />
 		<PackageReference Include="Jaina" Version="2.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />

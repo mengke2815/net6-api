@@ -1,4 +1,5 @@
-﻿global using Fleck;
+﻿global using AutoMapper;
+global using Fleck;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Caching.Memory;
 global using NET6.Domain.Entities;
