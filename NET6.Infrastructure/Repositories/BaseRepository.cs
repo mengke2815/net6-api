@@ -41,6 +41,14 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         return _sqlSugar.Ado.GetScalarAsync(sql);
     }
+    public virtual Task<List<T>> SqlQueryAsync<T>(string sql)
+    {
+        return _sqlSugar.Ado.SqlQueryAsync<T>(sql);
+    }
+    public virtual ISugarQueryable<T> SqlQueryable<T>(string sql) where T : class, new()
+    {
+        return _sqlSugar.SqlQueryable<T>(sql);
+    }
     #endregion
 
     #region 事务操作
