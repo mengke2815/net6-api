@@ -6,6 +6,9 @@
 #### 软件架构
 基于最新的.NET6平台，完全抛弃繁杂的接口，采用.NET最经典的三层架构，结合简化的DDD设计模式，搭配Sqlsugar、Autofac、Serilog、CSRedis等优秀框架，代码简洁，结构清晰，可塑性极强，同时提供CodeFirst控制台项目，可一键同步数据库表结构，添加种子数据，实现一键部署，适合中小型企业、个人项目等快速开发，也可集成IdentityServer、Ocelot、Consul等实现微服务集群。麻雀虽小，然五脏俱全。
 
+#### 文档
+https://blog.csdn.net/mengke2815
+
 #### 本项目框架及功能将在日后逐步升级完善，敬请期待！
 
 
