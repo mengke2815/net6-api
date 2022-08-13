@@ -8,13 +8,13 @@
 public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
 {
     readonly IHttpContextAccessor _context;
-    public SqlSugarScope _sqlSugar;
-    public SqlSugarScopeProvider _sqlSugarScopeProvider;
-    public BaseRepository(IHttpContextAccessor context, SqlSugarScope sqlSugar)
+    public SqlSugarClient _sqlSugar;
+    public SqlSugarProvider _sqlSugarProvider;
+    public BaseRepository(IHttpContextAccessor context, SqlSugarClient sqlSugar)
     {
         _context = context;
         _sqlSugar = sqlSugar;
-        _sqlSugarScopeProvider = sqlSugar.GetConnectionScopeWithAttr<TEntity>();
+        _sqlSugarProvider = sqlSugar.GetConnectionWithAttr<TEntity>();
     }
 
     #region 事务操作
@@ -47,23 +47,23 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     #region 原生Sql
     public virtual Task<int> ExecuteCommandAsync(string sql)
     {
-        return _sqlSugarScopeProvider.Ado.ExecuteCommandAsync(sql);
+        return _sqlSugarProvider.Ado.ExecuteCommandAsync(sql);
     }
     public virtual Task<DataTable> GetDataTableAsync(string sql)
     {
-        return _sqlSugarScopeProvider.Ado.GetDataTableAsync(sql);
+        return _sqlSugarProvider.Ado.GetDataTableAsync(sql);
     }
     public virtual Task<object> GetScalarAsync(string sql)
     {
-        return _sqlSugarScopeProvider.Ado.GetScalarAsync(sql);
+        return _sqlSugarProvider.Ado.GetScalarAsync(sql);
     }
     public virtual Task<List<T>> SqlQueryAsync<T>(string sql)
     {
-        return _sqlSugarScopeProvider.Ado.SqlQueryAsync<T>(sql);
+        return _sqlSugarProvider.Ado.SqlQueryAsync<T>(sql);
     }
     public virtual ISugarQueryable<T> SqlQueryable<T>(string sql) where T : class, new()
     {
-        return _sqlSugarScopeProvider.SqlQueryable<T>(sql);
+        return _sqlSugarProvider.SqlQueryable<T>(sql);
     }
     #endregion
 
@@ -71,7 +71,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     public bool IsTableExist()
     {
         var table = typeof(TEntity).GetCustomAttribute<SugarTable>();
-        return _sqlSugarScopeProvider.DbMaintenance.IsAnyTable(table.TableName, false);
+        return _sqlSugarProvider.DbMaintenance.IsAnyTable(table.TableName, false);
     }
     public bool IsTableExist<T>()
     {
@@ -80,7 +80,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public bool CreateDataBase()
     {
-        return _sqlSugarScopeProvider.DbMaintenance.CreateDatabase();
+        return _sqlSugarProvider.DbMaintenance.CreateDatabase();
     }
     public bool CreateDataBase<T>()
     {
@@ -89,9 +89,9 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     public bool CopyTable(string newname)
     {
         var table = typeof(TEntity).GetCustomAttribute<SugarTable>();
-        if (!_sqlSugarScopeProvider.DbMaintenance.IsAnyTable(newname, false))
+        if (!_sqlSugarProvider.DbMaintenance.IsAnyTable(newname, false))
         {
-            return _sqlSugarScopeProvider.DbMaintenance.BackupTable(table.TableName, newname, 0);
+            return _sqlSugarProvider.DbMaintenance.BackupTable(table.TableName, newname, 0);
         }
         return false;
     }
@@ -107,7 +107,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     public bool TruncateTable()
     {
         var table = typeof(TEntity).GetCustomAttribute<SugarTable>();
-        return _sqlSugarScopeProvider.DbMaintenance.TruncateTable(table.TableName);
+        return _sqlSugarProvider.DbMaintenance.TruncateTable(table.TableName);
     }
     public bool TruncateTable<T>()
     {
@@ -139,33 +139,33 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     #region CRUD
     public virtual Task<bool> AnyAsync(Expression<Func<TEntity, bool>> exp)
     {
-        return _sqlSugarScopeProvider.Queryable<TEntity>().AnyAsync(exp);
+        return _sqlSugarProvider.Queryable<TEntity>().AnyAsync(exp);
     }
     public virtual ISugarQueryable<TEntity> Query(Expression<Func<TEntity, bool>> exp)
     {
-        return _sqlSugarScopeProvider.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp);
+        return _sqlSugarProvider.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp);
     }
     public virtual ISugarQueryable<TEntity> Query()
     {
-        return _sqlSugarScopeProvider.Queryable<TEntity>().Where(a => !a.IsDeleted);
+        return _sqlSugarProvider.Queryable<TEntity>().Where(a => !a.IsDeleted);
     }
     public virtual ISugarQueryable<TDto> QueryDto(Expression<Func<TEntity, bool>> exp)
     {
-        return _sqlSugarScopeProvider.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp).Select<TDto>();
+        return _sqlSugarProvider.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp).Select<TDto>();
     }
     public virtual ISugarQueryable<TDto> QueryDto()
     {
-        return _sqlSugarScopeProvider.Queryable<TEntity>().Where(a => !a.IsDeleted).Select<TDto>();
+        return _sqlSugarProvider.Queryable<TEntity>().Where(a => !a.IsDeleted).Select<TDto>();
     }
     public virtual Task<TDto> GetDtoAsync(Expression<Func<TEntity, bool>> exp)
     {
-        return _sqlSugarScopeProvider.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp).Select<TDto>().FirstAsync();
+        return _sqlSugarProvider.Queryable<TEntity>().Where(a => !a.IsDeleted).Where(exp).Select<TDto>().FirstAsync();
     }
     public virtual Task<int> AddAsync(TEntity entity)
     {
         entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         CommonFun.CoverNull(entity);
-        return _sqlSugarScopeProvider.Insertable(entity).ExecuteCommandAsync();
+        return _sqlSugarProvider.Insertable(entity).ExecuteCommandAsync();
     }
     public virtual Task<int> AddAsync(List<TEntity> entities)
     {
@@ -174,44 +174,44 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
             item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
         CommonFun.CoverNull(entities);
-        return _sqlSugarScopeProvider.Insertable(entities).ExecuteCommandAsync();
+        return _sqlSugarProvider.Insertable(entities).ExecuteCommandAsync();
     }
     public virtual Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> exp)
     {
-        return _sqlSugarScopeProvider.Queryable<TEntity>().FirstAsync(exp);
+        return _sqlSugarProvider.Queryable<TEntity>().FirstAsync(exp);
     }
     public virtual Task<TEntity> GetAsync(string id)
     {
-        return _sqlSugarScopeProvider.Queryable<TEntity>().InSingleAsync(id);
+        return _sqlSugarProvider.Queryable<TEntity>().InSingleAsync(id);
     }
     public virtual Task<int> DeleteAsync(Expression<Func<TEntity, bool>> wherexp)
     {
-        return _sqlSugarScopeProvider.Deleteable<TEntity>().Where(wherexp).ExecuteCommandAsync();
+        return _sqlSugarProvider.Deleteable<TEntity>().Where(wherexp).ExecuteCommandAsync();
     }
     public virtual Task<int> DeleteAsync(TEntity entity)
     {
-        return _sqlSugarScopeProvider.Deleteable<TEntity>(entity).ExecuteCommandAsync();
+        return _sqlSugarProvider.Deleteable<TEntity>(entity).ExecuteCommandAsync();
     }
     public virtual Task<int> DeleteAsync(List<TEntity> entities)
     {
-        return _sqlSugarScopeProvider.Deleteable<TEntity>(entities).ExecuteCommandAsync();
+        return _sqlSugarProvider.Deleteable<TEntity>(entities).ExecuteCommandAsync();
     }
     public virtual Task<int> UpdateAsync(Expression<Func<TEntity, bool>> wherexp, Expression<Func<TEntity, TEntity>> upexp)
     {
-        return _sqlSugarScopeProvider.Updateable<TEntity>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
+        return _sqlSugarProvider.Updateable<TEntity>().Where(wherexp).SetColumns(upexp).ExecuteCommandAsync();
     }
     public virtual Task<int> UpdateAsync(TEntity entity)
     {
-        return _sqlSugarScopeProvider.Updateable<TEntity>(entity).ExecuteCommandAsync();
+        return _sqlSugarProvider.Updateable<TEntity>(entity).ExecuteCommandAsync();
     }
     public virtual Task<int> UpdateAsync(List<TEntity> entities)
     {
-        return _sqlSugarScopeProvider.Updateable<TEntity>(entities).ExecuteCommandAsync();
+        return _sqlSugarProvider.Updateable<TEntity>(entities).ExecuteCommandAsync();
     }
     public virtual Task<int> SoftDeleteAsync(string id)
     {
         var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return _sqlSugarScopeProvider.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
+        return _sqlSugarProvider.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
         {
             IsDeleted = true,
             DeleteTime = DateTime.Now,
@@ -221,7 +221,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     public virtual Task<int> SoftDeleteAsync(Expression<Func<TEntity, bool>> wherexp)
     {
         var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return _sqlSugarScopeProvider.Updateable<TEntity>().Where(wherexp).SetColumns(a => new TEntity()
+        return _sqlSugarProvider.Updateable<TEntity>().Where(wherexp).SetColumns(a => new TEntity()
         {
             IsDeleted = true,
             DeleteTime = DateTime.Now,
@@ -329,7 +329,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         CommonFun.CoverNull(entity);
-        return _sqlSugarScopeProvider.Insertable(entity).SplitTable().ExecuteCommandAsync();
+        return _sqlSugarProvider.Insertable(entity).SplitTable().ExecuteCommandAsync();
     }
     public virtual Task<int> AddSplitTableAsync(List<TEntity> entities)
     {
@@ -338,11 +338,11 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
             item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
         CommonFun.CoverNull(entities);
-        return _sqlSugarScopeProvider.Insertable(entities).SplitTable().ExecuteCommandAsync();
+        return _sqlSugarProvider.Insertable(entities).SplitTable().ExecuteCommandAsync();
     }
     public virtual string GetTableName(DateTime datetime)
     {
-        return _sqlSugarScopeProvider.SplitHelper<TEntity>().GetTableName(datetime);
+        return _sqlSugarProvider.SplitHelper<TEntity>().GetTableName(datetime);
     }
     public virtual Task<int> AddSplitTableAsync<T>(T entity) where T : EntityBase, new()
     {
@@ -368,11 +368,11 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     #region 大数据写入
     public virtual Task<int> AddBulkAsync(List<TEntity> entities)
     {
-        return _sqlSugarScopeProvider.Fastest<TEntity>().BulkCopyAsync(entities);
+        return _sqlSugarProvider.Fastest<TEntity>().BulkCopyAsync(entities);
     }
     public virtual Task<int> UpdateBulkAsync(List<TEntity> entities)
     {
-        return _sqlSugarScopeProvider.Fastest<TEntity>().BulkUpdateAsync(entities);
+        return _sqlSugarProvider.Fastest<TEntity>().BulkUpdateAsync(entities);
     }
     public virtual Task<int> AddBulkAsync<T>(List<T> entities) where T : EntityBase, new()
     {
@@ -384,7 +384,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<int> AddSplitTableBulkAsync(List<TEntity> entities)
     {
-        return _sqlSugarScopeProvider.Fastest<TEntity>().SplitTable().BulkCopyAsync(entities);
+        return _sqlSugarProvider.Fastest<TEntity>().SplitTable().BulkCopyAsync(entities);
     }
     public virtual Task<int> AddSplitTableBulkAsync<T>(List<T> entities) where T : EntityBase, new()
     {

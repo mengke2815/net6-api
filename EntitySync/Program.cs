@@ -3,12 +3,11 @@ using NET6.Domain.Entities;
 using SqlSugar;
 
 #region 初始化
-var db = new SqlSugarScope(new ConnectionConfig()
+var db = new SqlSugarClient(new ConnectionConfig()
 {
     ConnectionString = "server=localhost;Database=DBTest;Uid=root;Pwd=123456@q;",
     DbType = DbType.MySql,
-    IsAutoCloseConnection = true,
-    InitKeyType = InitKeyType.Attribute
+    IsAutoCloseConnection = true
 });
 #endregion
 
