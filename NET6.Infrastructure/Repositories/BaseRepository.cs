@@ -8,13 +8,13 @@
 public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
 {
     readonly IHttpContextAccessor _context;
-    public SqlSugarClient _sqlSugar;
-    public SqlSugarProvider _sqlSugarProvider;
-    public BaseRepository(IHttpContextAccessor context, SqlSugarClient sqlSugar)
+    public SqlSugarScope _sqlSugar;
+    public SqlSugarScopeProvider _sqlSugarProvider;
+    public BaseRepository(IHttpContextAccessor context, SqlSugarScope sqlSugar)
     {
         _context = context;
         _sqlSugar = sqlSugar;
-        _sqlSugarProvider = sqlSugar.GetConnectionWithAttr<TEntity>();
+        _sqlSugarProvider = sqlSugar.GetConnectionScopeWithAttr<TEntity>();
     }
 
     #region 事务操作

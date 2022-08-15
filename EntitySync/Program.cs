@@ -3,7 +3,7 @@ using NET6.Domain.Entities;
 using SqlSugar;
 
 #region 初始化
-var db = new SqlSugarClient(new ConnectionConfig()
+var db = new SqlSugarScope(new ConnectionConfig()
 {
     ConnectionString = "server=localhost;Database=DBTest;Uid=root;Pwd=123456@q;",
     DbType = DbType.MySql,

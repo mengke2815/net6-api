@@ -5,7 +5,7 @@
 /// </summary>
 public class OperationLogRepository : BaseRepository<OperationLog, OperationLogView>
 {
-    public OperationLogRepository(IHttpContextAccessor context, IMapper mapper, SqlSugarClient sqlSugar) : base(context, sqlSugar)
+    public OperationLogRepository(IHttpContextAccessor context, IMapper mapper, SqlSugarScope sqlSugar) : base(context, sqlSugar)
     {
 
     }

@@ -5,7 +5,7 @@
 /// </summary>
 public class AddressRepository : BaseRepository<Address, AddressView>
 {
-    public AddressRepository(IHttpContextAccessor context, IMapper mapper, SqlSugarClient sqlSugar) : base(context, sqlSugar)
+    public AddressRepository(IHttpContextAccessor context, IMapper mapper, SqlSugarScope sqlSugar) : base(context, sqlSugar)
     {
 
     }

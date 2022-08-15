@@ -23,7 +23,7 @@ if (_config.GetConnectionString("SugarConnectDBType") == "mysql")
 }
 builder.Services.AddSingleton(options =>
 {
-    return new SqlSugarClient(new List<ConnectionConfig>()
+    return new SqlSugarScope(new List<ConnectionConfig>()
     {
         new ConnectionConfig() { ConfigId = DBEnum.Ä¬ÈÏÊý¾Ý¿â, ConnectionString = _config.GetConnectionString("SugarConnectString"), DbType = dbtype, IsAutoCloseConnection = true }
     });
