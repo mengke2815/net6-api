@@ -1,6 +1,4 @@
-﻿using static NET6.Infrastructure.Tools.CurrentUser;
-
-namespace NET6.Api.Controllers;
+﻿namespace NET6.Api.Controllers;
 
 /// <summary>
 /// 鉴权相关

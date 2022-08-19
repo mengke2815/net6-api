@@ -34,3 +34,4 @@ global using System.Reflection;
 global using System.Security.Claims;
 global using System.Text;
 global using System.Text.Json.Serialization;
+global using static NET6.Infrastructure.Tools.CurrentUser;
