@@ -159,7 +159,7 @@ builder.Services.AddMemoryCache();
 #endregion
 
 #region 注入http上下文
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.AddServiceProvider();
 #endregion
 
 // Add services to the container.

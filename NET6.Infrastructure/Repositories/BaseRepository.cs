@@ -7,12 +7,10 @@
 /// <typeparam name="TDto"></typeparam>
 public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
 {
-    readonly IHttpContextAccessor _context;
     public SqlSugarScope _sqlSugar;
     public SqlSugarScopeProvider _sqlSugarProvider;
-    public BaseRepository(IHttpContextAccessor context, SqlSugarScope sqlSugar)
+    public BaseRepository(SqlSugarScope sqlSugar)
     {
-        _context = context;
         _sqlSugar = sqlSugar;
         _sqlSugarProvider = sqlSugar.GetConnectionScopeWithAttr<TEntity>();
     }
@@ -163,7 +161,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<int> AddAsync(TEntity entity)
     {
-        entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        entity.CreateUserId = CurrentUser.UserId;
         CommonFun.CoverNull(entity);
         return _sqlSugarProvider.Insertable(entity).ExecuteCommandAsync();
     }
@@ -171,7 +169,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         foreach (var item in entities)
         {
-            item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            item.CreateUserId = CurrentUser.UserId;
         }
         CommonFun.CoverNull(entities);
         return _sqlSugarProvider.Insertable(entities).ExecuteCommandAsync();
@@ -210,22 +208,20 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<int> SoftDeleteAsync(string id)
     {
-        var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return _sqlSugarProvider.Updateable<TEntity>().Where(a => a.Id.Equals(id)).SetColumns(a => new TEntity()
         {
             IsDeleted = true,
             DeleteTime = DateTime.Now,
-            DeleteUserId = userid
+            DeleteUserId = CurrentUser.UserId
         }).ExecuteCommandAsync();
     }
     public virtual Task<int> SoftDeleteAsync(Expression<Func<TEntity, bool>> wherexp)
     {
-        var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return _sqlSugarProvider.Updateable<TEntity>().Where(wherexp).SetColumns(a => new TEntity()
         {
             IsDeleted = true,
             DeleteTime = DateTime.Now,
-            DeleteUserId = userid
+            DeleteUserId = CurrentUser.UserId
         }).ExecuteCommandAsync();
     }
     #endregion
@@ -257,7 +253,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<int> AddAsync<T>(T entity) where T : EntityBase, new()
     {
-        entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        entity.CreateUserId = CurrentUser.UserId;
         CommonFun.CoverNull(entity);
         return _sqlSugar.GetConnectionScopeWithAttr<T>().Insertable(entity).ExecuteCommandAsync();
     }
@@ -265,7 +261,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         foreach (var item in entities)
         {
-            item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            item.CreateUserId = CurrentUser.UserId;
         }
         CommonFun.CoverNull(entities);
         return _sqlSugar.GetConnectionScopeWithAttr<T>().Insertable(entities).ExecuteCommandAsync();
@@ -304,22 +300,20 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<int> SoftDeleteAsync<T>(string id) where T : EntityBase, new()
     {
-        var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return _sqlSugar.GetConnectionScopeWithAttr<T>().Updateable<T>().Where(a => a.Id.Equals(id)).SetColumns(a => new T()
         {
             IsDeleted = true,
             DeleteTime = DateTime.Now,
-            DeleteUserId = userid
+            DeleteUserId = CurrentUser.UserId
         }).ExecuteCommandAsync();
     }
     public virtual Task<int> SoftDeleteAsync<T>(Expression<Func<T, bool>> wherexp) where T : EntityBase, new()
     {
-        var userid = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return _sqlSugar.GetConnectionScopeWithAttr<T>().Updateable<T>().Where(wherexp).SetColumns(a => new T()
         {
             IsDeleted = true,
             DeleteTime = DateTime.Now,
-            DeleteUserId = userid
+            DeleteUserId = CurrentUser.UserId
         }).ExecuteCommandAsync();
     }
     #endregion
@@ -327,7 +321,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     #region 自动分表
     public virtual Task<int> AddSplitTableAsync(TEntity entity)
     {
-        entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        entity.CreateUserId = CurrentUser.UserId;
         CommonFun.CoverNull(entity);
         return _sqlSugarProvider.Insertable(entity).SplitTable().ExecuteCommandAsync();
     }
@@ -335,7 +329,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         foreach (var item in entities)
         {
-            item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            item.CreateUserId = CurrentUser.UserId;
         }
         CommonFun.CoverNull(entities);
         return _sqlSugarProvider.Insertable(entities).SplitTable().ExecuteCommandAsync();
@@ -346,7 +340,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     }
     public virtual Task<int> AddSplitTableAsync<T>(T entity) where T : EntityBase, new()
     {
-        entity.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        entity.CreateUserId = CurrentUser.UserId;
         CommonFun.CoverNull(entity);
         return _sqlSugar.GetConnectionScopeWithAttr<T>().Insertable(entity).SplitTable().ExecuteCommandAsync();
     }
@@ -354,7 +348,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         foreach (var item in entities)
         {
-            item.CreateUserId = _context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            item.CreateUserId = CurrentUser.UserId;
         }
         CommonFun.CoverNull(entities);
         return _sqlSugar.GetConnectionScopeWithAttr<T>().Insertable(entities).SplitTable().ExecuteCommandAsync();

@@ -35,12 +35,12 @@
 		<PackageReference Include="AutoMapper" Version="11.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 		<PackageReference Include="CSRedisCore" Version="3.8.3" />
-		<PackageReference Include="Jaina" Version="3.0.0" />
+		<PackageReference Include="Jaina" Version="3.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
 		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="SqlSugarCore" Version="5.1.2.1" />
+		<PackageReference Include="SqlSugarCore" Version="5.1.2.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 		<PackageReference Include="UAParser" Version="3.1.47" />
 	</ItemGroup>

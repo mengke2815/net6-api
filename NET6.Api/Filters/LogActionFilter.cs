@@ -5,12 +5,9 @@
 /// </summary>
 public class LogActionFilter : IAsyncActionFilter
 {
-    readonly IHttpContextAccessor _context;
     readonly OperationLogRepository _logRep;
-
-    public LogActionFilter(IHttpContextAccessor context, OperationLogRepository logRep)
+    public LogActionFilter(OperationLogRepository logRep)
     {
-        _context = context;
         _logRep = logRep;
     }
 
@@ -32,7 +29,7 @@ public class LogActionFilter : IAsyncActionFilter
 
         var args = context.ActionArguments.ToJson();
         var result = actionResult?.ToJson();
-        var request = _context.HttpContext?.Request;
+        var request = BuilderExtensions.ServiceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext?.Request;
         var ua = request?.Headers["User-Agent"];
         var client = UAParser.Parser.GetDefault().Parse(ua);
         var controller = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerName.ToLower();

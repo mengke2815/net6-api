@@ -3,12 +3,8 @@
 /// <summary>
 /// 操作日志
 /// </summary>
-public class OperationLogView
+public class OperationLogView : ViewBase
 {
-    /// <summary>
-    /// 编号
-    /// </summary>
-    public string Id { get; set; }
     /// <summary>
     /// IP
     /// </summary>
@@ -49,8 +45,4 @@ public class OperationLogView
     /// 操作结果
     /// </summary>
     public string Result { get; set; }
-    /// <summary>
-    /// 创建时间
-    /// </summary>
-    public DateTime CreateTime { get; set; }
 }

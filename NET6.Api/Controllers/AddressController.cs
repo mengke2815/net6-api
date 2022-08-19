@@ -22,7 +22,7 @@ public class AddressController : BaseController
     [ProducesResponseType(typeof(AddressView), StatusCodes.Status200OK)]
     public async Task<IActionResult> DefaultAsync()
     {
-        var model = await _addressRep.GetDtoAsync(a => a.IsDefault && a.UserId == CurrentUserId);
+        var model = await _addressRep.GetDtoAsync(a => a.IsDefault && a.UserId == CurrentUser.UserId);
         if (model == null) return JsonView("未找到默认地址");
         return JsonView(model);
     }

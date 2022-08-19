@@ -24,7 +24,7 @@ public class EntityBase
     /// 创建时间
     /// </summary>
     [SplitField]
-    [SugarColumn(ColumnDescription = "创建时间")]
+    [SugarColumn(ColumnDescription = "创建时间", IndexGroupNameList = new string[] { "index1" })]
     public DateTime CreateTime { get; set; } = DateTime.Now;
     /// <summary>
     /// 删除者Id

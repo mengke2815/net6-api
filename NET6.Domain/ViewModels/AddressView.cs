@@ -3,12 +3,8 @@
 /// <summary>
 /// 地址
 /// </summary>
-public class AddressView
+public class AddressView : ViewBase
 {
-    /// <summary>
-    /// 编号
-    /// </summary>
-    public string Id { get; set; }
     /// <summary>
     /// 收件人姓名
     /// </summary>
@@ -37,8 +33,4 @@ public class AddressView
     /// 是否是默认地址
     /// </summary>
     public bool IsDefault { get; set; }
-    /// <summary>
-    /// 创建时间
-    /// </summary>
-    public DateTime CreateTime { get; set; }
 }

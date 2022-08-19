@@ -17,6 +17,7 @@
 	<ItemGroup>
 		<PackageReference Include="EPPlus" Version="6.0.6" />
 		<PackageReference Include="Fleck" Version="1.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
@@ -24,6 +25,15 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\NET6.Domain\NET6.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Microsoft.AspNetCore">
+	    <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.8\ref\net6.0\Microsoft.AspNetCore.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Microsoft.Extensions.DependencyInjection">
+	    <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.8\ref\net6.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>

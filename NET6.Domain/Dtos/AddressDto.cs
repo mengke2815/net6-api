@@ -3,7 +3,7 @@
 /// <summary>
 /// 地址
 /// </summary>
-public class AddressDto
+public class AddressDto : DtoBase
 {
     /// <summary>
     /// 收件人姓名

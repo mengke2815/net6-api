@@ -1,4 +1,6 @@
-﻿namespace NET6.Api.Controllers;
+﻿using static NET6.Infrastructure.Tools.CurrentUser;
+
+namespace NET6.Api.Controllers;
 
 /// <summary>
 /// 鉴权相关
@@ -36,8 +38,8 @@ public class AuthController : BaseController
         };
         //用户信息
         var claims = new[] {
-            new Claim(ClaimTypes.NameIdentifier, userid),
-            new Claim(ClaimTypes.Name, username)
+            new Claim(ClaimAttributes.UserId, userid),
+            new Claim(ClaimAttributes.UserName, username)
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -65,8 +67,8 @@ public class AuthController : BaseController
         try
         {
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(dto.AccessToken);
-            var userid = jwtToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
-            var username = jwtToken.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Name)?.Value;
+            var userid = jwtToken.Claims.FirstOrDefault(a => a.Type == ClaimAttributes.UserId)?.Value;
+            var username = jwtToken.Claims.FirstOrDefault(a => a.Type == ClaimAttributes.UserName)?.Value;
             var refreshtoken = CacheHelper.Get<string>($"{CacheEnum.刷新令牌}_{userid}");
             if (refreshtoken == null) return JsonView("未找到该刷新令牌");
             if (refreshtoken != dto.RefreshToken) return JsonView("刷新令牌不正确");
