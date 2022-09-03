@@ -6,6 +6,7 @@ var _config = new ConfigurationBuilder()
                  .SetBasePath(basePath)
                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                  .Build();
+builder.Services.AddSingleton(new AppSettingsHelper(_config));
 
 #region 接口分组
 var groups = new List<Tuple<string, string>>
@@ -17,7 +18,7 @@ var groups = new List<Tuple<string, string>>
 
 #region 注入数据库
 var dbtype = DbType.SqlServer;
-if (_config.GetConnectionString("SugarConnectDBType") == "mysql")
+if (AppSettingsHelper.Get("SugarConnectDBType", true) == "mysql")
 {
     dbtype = DbType.MySql;
 }
@@ -25,17 +26,17 @@ builder.Services.AddSingleton(options =>
 {
     return new SqlSugarScope(new List<ConnectionConfig>()
     {
-        new ConnectionConfig() { ConfigId = DBEnum.默认数据库, ConnectionString = _config.GetConnectionString("SugarConnectString"), DbType = dbtype, IsAutoCloseConnection = true }
+        new ConnectionConfig() { ConfigId = DBEnum.默认数据库, ConnectionString = AppSettingsHelper.Get("SugarConnectString", true), DbType = dbtype, IsAutoCloseConnection = true }
     });
 });
 #endregion
 
 #region 初始化Redis
-RedisHelper.Initialization(new CSRedisClient(_config.GetConnectionString("CSRedisConnectString")));
+RedisHelper.Initialization(new CSRedisClient(AppSettingsHelper.Get("CSRedisConnectString", true)));
 #endregion
 
 #region 添加swagger注释
-if (_config["UseSwagger"].ToBool())
+if (AppSettingsHelper.Get("UseSwagger").ToBool())
 {
     builder.Services.AddSwaggerGen(a =>
     {
@@ -86,7 +87,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         ValidAudience = "net6api.com",
         ValidIssuer = "net6api.com",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"])),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsHelper.Get("JwtSecurityKey"))),
         ClockSkew = TimeSpan.Zero
     };
     //监听JWT过期事件
@@ -197,7 +198,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 #region 启用跨域访问
 app.UseCors(builder => builder
-   .WithOrigins(_config["Origins"])
+   .WithOrigins(AppSettingsHelper.Get("Origins"))
    .AllowCredentials()
    .AllowAnyMethod()
    .AllowAnyHeader());
@@ -208,7 +209,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 #region 启用swaggerUI
-if (_config["UseSwagger"].ToBool())
+if (AppSettingsHelper.Get("UseSwagger").ToBool())
 {
     app.UseSwagger();
     app.UseSwaggerUI(a =>

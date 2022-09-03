@@ -5,12 +5,6 @@
 /// </summary>
 public class AuthController : BaseController
 {
-    readonly IConfiguration _config;
-    public AuthController(IConfiguration config)
-    {
-        _config = config;
-    }
-
     /// <summary>
     /// 用户登录
     /// </summary>
@@ -39,7 +33,7 @@ public class AuthController : BaseController
             new Claim(ClaimAttributes.UserId, userid),
             new Claim(ClaimAttributes.UserName, username)
         };
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsHelper.Get("JwtSecurityKey")));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
             issuer: "net6api.com",
@@ -79,7 +73,7 @@ public class AuthController : BaseController
                 Expires = DateTime.Now.AddDays(7),
                 RefreshToken = refreshtoken
             };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSecurityKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsHelper.Get("JwtSecurityKey")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 issuer: "net6api.com",
