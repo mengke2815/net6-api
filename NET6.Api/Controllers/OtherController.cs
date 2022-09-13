@@ -20,7 +20,7 @@ public class OtherController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> EventPubAsync()
     {
-        await _eventPublisher.PublishAsync(new ChannelEventSource(SubscribeEnum.登录事件, "这里是用户登录消息"));
+        await _eventPublisher.PublishAsync(SubscribeEnum.登录事件, "这里是用户登录消息");
         return JsonView(true);
     }
     /// <summary>
@@ -51,7 +51,7 @@ public class OtherController : BaseController
                     RedisHelper.Set("StockCount", count);
                     Logs($"第{i + 1}个人已抢到，当前剩余：{RedisHelper.Get<int>("StockCount")}件");
                     //下单推入消息总线
-                    await _eventPublisher.PublishDelayAsync(new ChannelEventSource(SubscribeEnum.下单事件, $"用户{i + 1}的订单开始处理..."), 2500);
+                    await _eventPublisher.PublishDelayAsync(SubscribeEnum.下单事件, 2500, $"用户{i + 1}的订单开始处理...");
                 }
                 else
                 {
