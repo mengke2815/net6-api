@@ -144,6 +144,7 @@ builder.Services.AddEventBus(builder =>
 {
     builder.ChannelCapacity = 5000;
     builder.AddSubscriber<LoginSubscriber>();
+    builder.AddSubscriber<OrderSubscriber>();
     builder.UnobservedTaskExceptionHandler = (obj, args) =>
     {
         Log.Error($"事件总线异常：{args.Exception}");
