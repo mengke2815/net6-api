@@ -5,7 +5,7 @@
 /// </summary>
 public class RedisEventSourceStorer : IEventSourceStorer
 {
-    readonly SemaphoreSlim _semaphore = new(0);
+    static readonly SemaphoreSlim _semaphore = new(0);
     public async ValueTask WriteAsync(IEventSource eventSource, CancellationToken cancellationToken)
     {
         await RedisHelper.LPushAsync("MyEventBus", eventSource);
@@ -15,6 +15,11 @@ public class RedisEventSourceStorer : IEventSourceStorer
     {
         await _semaphore.WaitAsync(cancellationToken);
         return await RedisHelper.RPopAsync<ChannelEventSource>("MyEventBus");
+    }
+    public void Dispose()
+    {
+        _semaphore.Release(int.MaxValue);
+        _semaphore.Dispose();
     }
 
     #region redis实现
