@@ -46,5 +46,16 @@ public class BaseController : ControllerBase
             return Ok(new JsonView { Code = StatusCodes.Status400BadRequest, Msg = msg });
         }
     }
+    protected virtual IActionResult JsonView(bool s, object data)
+    {
+        if (s)
+        {
+            return Ok(new JsonView { Code = StatusCodes.Status200OK, Data = data, Msg = "操作成功" });
+        }
+        else
+        {
+            return Ok(new JsonView { Code = StatusCodes.Status400BadRequest, Data = data, Msg = "操作失败" });
+        }
+    }
     #endregion
 }

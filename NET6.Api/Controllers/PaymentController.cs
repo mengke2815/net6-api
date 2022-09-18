@@ -17,11 +17,23 @@ public class PaymentController : BaseController
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    [HttpPost("wxpay")]
+    [HttpPost("pay")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public async Task<IActionResult> WXPayAsync(BillPayDto dto)
+    public async Task<IActionResult> PayAsync(BillPayDto dto)
     {
-        return JsonView(true);
+        if (dto.PayType == PayTypeEnum.微信)
+        {
+            var sign = WeChatTools.GetWeChatPaySign(dto.BillId, 15.8m, "openid");
+            return JsonView(true, (object)sign);
+        }
+        else if (dto.PayType == PayTypeEnum.支付宝)
+        {
+            return JsonView("暂不支持");
+        }
+        else
+        {
+            return JsonView("暂不支持");
+        }
     }
 
     /// <summary>
