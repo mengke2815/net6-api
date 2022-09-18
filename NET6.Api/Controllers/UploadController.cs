@@ -6,13 +6,19 @@
 [Route("upload")]
 public class UploadController : BaseController
 {
+    readonly IWebHostEnvironment _hostingEnvironment;
+    public UploadController(IWebHostEnvironment hostingEnvironment)
+    {
+        _hostingEnvironment = hostingEnvironment;
+    }
     /// <summary>
-    /// 上传文件
+    /// 上传文件 - 限制大小100M
     /// </summary>
     /// <param name="path">文件分类的文件夹名称</param>
     /// <returns></returns>
     [HttpPost("file")]
-    public async Task<IActionResult> FileUpload(string path = "default")
+    [RequestSizeLimit(100 * 1024 * 1024)]
+    public async Task<IActionResult> FileUpload(string path = "Default")
     {
         var files = Request.Form.Files;
         if (files.Count == 0) return JsonView("请选择文件");
@@ -28,13 +34,15 @@ public class UploadController : BaseController
 
             var fileext = Path.GetExtension(filename).ToLower();
 
-            CommonFun.CreateDir(AppContext.BaseDirectory + dircstr);
+            var folderpath = _hostingEnvironment.ContentRootPath;
+
+            CommonFun.CreateDir(folderpath + dircstr);
             //重新命名文件
             var pre = DateTime.Now.ToString("yyyyMMddHHmmssffff");
             var after = CommonFun.GetRandom(1000, 9999).ToString();
 
             var fileloadname = dircstr + pre + "_" + after + ProExt(fileext);
-            using (var stream = new FileStream(AppContext.BaseDirectory + fileloadname, FileMode.Create))
+            using (var stream = new FileStream(folderpath + fileloadname, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }

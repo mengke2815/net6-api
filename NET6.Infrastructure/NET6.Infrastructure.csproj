@@ -21,6 +21,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 	</ItemGroup>
 
@@ -30,10 +31,7 @@
 
 	<ItemGroup>
 	  <Reference Include="Microsoft.AspNetCore">
-	    <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.8\ref\net6.0\Microsoft.AspNetCore.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Microsoft.Extensions.DependencyInjection">
-	    <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.8\ref\net6.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+	    <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.9\ref\net6.0\Microsoft.AspNetCore.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
