@@ -19,6 +19,10 @@ public static class CommonFun
         var seed = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0);
         return new Random(seed).Next(minNum, maxNum);
     }
+    public static string GetSerialNumber(string prefix = "")
+    {
+        return prefix + DateTime.Now.ToString("yyyyMMddHHmmssfff") + GetRandom(1000, 9999).ToString();
+    }
     public static string ToJson(this object obj)
     {
         return JsonSerializer.Serialize(obj);
