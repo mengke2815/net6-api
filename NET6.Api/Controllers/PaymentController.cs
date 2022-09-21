@@ -64,7 +64,9 @@ public class PaymentController : BaseController
         if (notifyData.GetValue("result_code").Equals("SUCCESS"))
         {
             var out_trade_no = notifyData.GetValue("out_trade_no").ToString();
+            #region 业务逻辑写在此处
 
+            #endregion
             res.SetValue("return_code", "SUCCESS");
             res.SetValue("return_msg", "OK");
             return Ok(res.ToXml());

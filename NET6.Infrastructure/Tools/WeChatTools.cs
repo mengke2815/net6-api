@@ -69,7 +69,7 @@ public class WeChatTools
         return obj.ToJson();
     }
 
-    public static (bool result, string msg) WeChatPayTrans(string openid, double total, string desc = "微信提现", string ClientIp = "127.0.0.1")
+    public static (bool result, string msg) WeChatPayTrans(string openid, double total, string desc = "微信转账", string ClientIp = "127.0.0.1")
     {
         var url = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
         var packageParameter = new Hashtable
@@ -91,15 +91,15 @@ public class WeChatTools
         var result_code = xe.Element("result_code").Value;
         if (result_code.Equals("SUCCESS"))
         {
-            return (true, "提现成功");
+            return (true, "微信转账成功");
         }
         else
         {
-            return (false, "提现失败");
+            return (false, "微信转账失败");
         }
     }
 
-    public (bool result, string msg) WeChatPayReturn(string out_trade_no, double total, double refund)
+    public static (bool result, string msg) WeChatPayReturn(string out_trade_no, double total, double refund)
     {
         var url = "https://api.mch.weixin.qq.com/secapi/pay/refund";
         var packageParameter = new Hashtable
@@ -118,11 +118,11 @@ public class WeChatTools
         var result_code = xe.Element("result_code").Value;
         if (result_code.Equals("SUCCESS"))
         {
-            return (true, "退款成功");
+            return (true, "微信退款成功");
         }
         else
         {
-            return (false, "退款失败");
+            return (false, "微信退款失败");
         }
     }
 
