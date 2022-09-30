@@ -31,19 +31,19 @@ public class WeChatTools
         var url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
         var nstr = MakeNonceStr();
         var packageParameter = new Hashtable
-            {
-                { "appid", AppSettingsHelper.Get("WeChatPay:AppId") },
-                { "body", Des },
-                { "openid", openid },
-                { "mch_id", AppSettingsHelper.Get("WeChatPay:MchId") },
-                { "notify_url", AppSettingsHelper.Get("Domain") + "/payment/wxnotify" },
-                { "nonce_str", nstr },
-                { "out_trade_no", orderno },
-                { "total_fee", ((int)(total * 100)).ToString() },
-                { "spbill_create_ip", ClientIp },
-                { "trade_type", "JSAPI" },
-                { "fee_type", FeeType }
-            };
+        {
+            { "appid", AppSettingsHelper.Get("WeChatPay:AppId") },
+            { "body", Des },
+            { "openid", openid },
+            { "mch_id", AppSettingsHelper.Get("WeChatPay:MchId") },
+            { "notify_url", AppSettingsHelper.Get("Domain") + "/payment/wxnotify" },
+            { "nonce_str", nstr },
+            { "out_trade_no", orderno },
+            { "total_fee", ((int)(total * 100)).ToString() },
+            { "spbill_create_ip", ClientIp },
+            { "trade_type", "JSAPI" },
+            { "fee_type", FeeType }
+        };
         var sign = CreateMd5Sign(packageParameter);
         packageParameter.Add("sign", sign);
         var xe = PostDataToWeiXin(url, packageParameter);
@@ -51,13 +51,13 @@ public class WeChatTools
         var prepayId = xe.Element("prepay_id").Value;
         nstr = xe.Element("nonce_str").Value;
         var paySignReqHandler = new Hashtable
-            {
-                { "appId", AppSettingsHelper.Get("WeChatPay:AppId") },
-                { "nonceStr", nstr },
-                { "signType", "MD5" },
-                { "package", "prepay_id=" + prepayId },
-                { "timeStamp", timeStamp.ToString() }
-            };
+        {
+            { "appId", AppSettingsHelper.Get("WeChatPay:AppId") },
+            { "nonceStr", nstr },
+            { "signType", "MD5" },
+            { "package", "prepay_id=" + prepayId },
+            { "timeStamp", timeStamp.ToString() }
+        };
         var paySign = CreateMd5Sign(paySignReqHandler);
         var obj = new
         {
