@@ -59,7 +59,7 @@ public class WeChatViews
     public class WxPayData
     {
         //采用排序的Dictionary的好处是方便对数据包进行签名，不用再签名之前再做一次排序
-        private SortedDictionary<string, object> m_values = new SortedDictionary<string, object>();
+        private SortedDictionary<string, object> m_values = new();
 
         /**
         * 设置某个字段的值
@@ -78,8 +78,7 @@ public class WeChatViews
         */
         public object GetValue(string key)
         {
-            object o = null;
-            m_values.TryGetValue(key, out o);
+            m_values.TryGetValue(key, out object o);
             return o;
         }
 
@@ -90,8 +89,7 @@ public class WeChatViews
          */
         public bool IsSet(string key)
         {
-            object o = null;
-            m_values.TryGetValue(key, out o);
+            m_values.TryGetValue(key, out object o);
             if (null != o)
                 return true;
             else
@@ -112,7 +110,7 @@ public class WeChatViews
                 //throw new WxPayException("WxPayData数据为空!");
             }
 
-            string xml = "<xml>";
+            var xml = "<xml>";
             foreach (KeyValuePair<string, object> pair in m_values)
             {
                 //字段值不能为null，会影响后续流程
@@ -154,20 +152,21 @@ public class WeChatViews
                 //throw new WxPayException("将空的xml串转换为WxPayData不合法!");
             }
 
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xml);
-            XmlNode xmlNode = xmlDoc.FirstChild;//获取到根节点<xml>
-            XmlNodeList nodes = xmlNode.ChildNodes;
-            foreach (XmlNode xn in nodes)
+            var xmlNode = xmlDoc.FirstChild;//获取到根节点<xml>
+            var nodes = xmlNode.ChildNodes;
+            foreach (var xn in nodes)
             {
-                XmlElement xe = (XmlElement)xn;
+                var xe = (XmlElement)xn;
                 m_values[xe.Name] = xe.InnerText;//获取xml的键值对到WxPayData内部的数据中
             }
+
             try
             {
                 CheckSign(ApiKey);//验证签名,不通过会抛异常
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw new WxPayException(ex.Message);
             }
@@ -181,7 +180,7 @@ public class WeChatViews
         */
         public string ToUrl()
         {
-            string buff = "";
+            var buff = "";
             foreach (KeyValuePair<string, object> pair in m_values)
             {
                 if (pair.Value == null)
@@ -208,14 +207,14 @@ public class WeChatViews
         public string MakeSign(string ApiKey)
         {
             //转url格式
-            string str = ToUrl();
+            var str = ToUrl();
             //在string后加入API KEY
             str += "&key=" + ApiKey;
             //MD5加密
             var md5 = MD5.Create();
             var bs = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
             var sb = new StringBuilder();
-            foreach (byte b in bs)
+            foreach (var b in bs)
             {
                 sb.Append(b.ToString("x2"));
             }
@@ -243,10 +242,10 @@ public class WeChatViews
             }
 
             //获取接收到的签名
-            string return_sign = GetValue("sign").ToString();
+            var return_sign = GetValue("sign").ToString();
 
             //在本地计算新的签名
-            string cal_sign = MakeSign(ApiKey);
+            var cal_sign = MakeSign(ApiKey);
 
             if (cal_sign == return_sign)
             {
