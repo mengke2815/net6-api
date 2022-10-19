@@ -31,7 +31,7 @@
 
 	<ItemGroup>
 	  <Reference Include="Microsoft.AspNetCore">
-	    <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.9\ref\net6.0\Microsoft.AspNetCore.dll</HintPath>
+	    <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.10\ref\net6.0\Microsoft.AspNetCore.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
