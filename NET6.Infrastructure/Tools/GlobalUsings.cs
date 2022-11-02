@@ -1,4 +1,5 @@
-﻿global using AutoMapper;
+﻿global using AspNetCoreRateLimit;
+global using AutoMapper;
 global using Fleck;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
