@@ -1,3 +1,5 @@
+using AspNetCoreRateLimit;
+
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
@@ -164,6 +166,19 @@ builder.Services.AddMemoryCache();
 builder.AddServiceProvider();
 #endregion
 
+#region 配置限流
+//加载常规配置
+builder.Services.Configure<IpRateLimitOptions>(_config.GetSection("IpRateLimiting"));
+//加载Ip规则限制
+builder.Services.Configure<IpRateLimitPolicies>(_config.GetSection("IpRateLimitPolicies"));
+//注入计数器和规则存储
+builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+//配置（解析器、计数器密钥生成器）
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+#endregion
+
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
 {
@@ -208,6 +223,8 @@ app.UseCors(builder => builder
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseIpRateLimiting();
 
 #region 启用swaggerUI
 if (AppSettingsHelper.Get("UseSwagger").ToBool())
