@@ -15,6 +15,7 @@ public class LogSubscriber : IEventSubscriber
     public async Task LoginEvent(EventHandlerExecutingContext context)
     {
         var log = context.Source.Payload.ToString().ToObject<OperationLog>();
+        //分表插入日志
         await _logRep.AddSplitTableAsync(log);
     }
 }
