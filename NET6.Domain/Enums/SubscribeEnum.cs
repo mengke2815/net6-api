@@ -5,6 +5,7 @@
 /// </summary>
 public enum SubscribeEnum : int
 {
-    登录事件 = 1,
-    下单事件 = 2
+    审计日志 = 1,
+    登录事件 = 2,
+    下单事件 = 3
 }

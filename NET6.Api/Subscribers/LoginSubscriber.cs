@@ -1,7 +1,7 @@
 ﻿namespace NET6.Api.Subscribers;
 
 /// <summary>
-/// 订阅者
+/// 用户登录
 /// </summary>
 public class LoginSubscriber : IEventSubscriber
 {

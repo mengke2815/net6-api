@@ -5,10 +5,10 @@
 /// </summary>
 public class LogActionFilter : IAsyncActionFilter
 {
-    readonly OperationLogRepository _logRep;
-    public LogActionFilter(OperationLogRepository logRep)
+    readonly IEventPublisher _eventPublisher;
+    public LogActionFilter(IEventPublisher eventPublisher)
     {
-        _logRep = logRep;
+        _eventPublisher = eventPublisher;
     }
 
     public Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -48,7 +48,8 @@ public class LogActionFilter : IAsyncActionFilter
             BrowserInfo = ua,
             IP = CommonFun.GetIP(request)
         };
-        //自动分表插入
-        await _logRep.AddSplitTableAsync(log);
+
+        //推入消息总线
+        await _eventPublisher.PublishAsync(SubscribeEnum.审计日志, log.ToJson());
     }
 }

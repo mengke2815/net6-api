@@ -1,7 +1,7 @@
 ﻿namespace NET6.Api.Subscribers;
 
 /// <summary>
-/// 订阅者
+/// 下单事件
 /// </summary>
 public class OrderSubscriber : IEventSubscriber
 {

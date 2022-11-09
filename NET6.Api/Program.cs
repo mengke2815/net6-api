@@ -144,6 +144,7 @@ builder.Services.AddHostedService<TimerService>();
 builder.Services.AddEventBus(builder =>
 {
     builder.ChannelCapacity = 5000;
+    builder.AddSubscriber<LogSubscriber>();
     builder.AddSubscriber<LoginSubscriber>();
     builder.AddSubscriber<OrderSubscriber>();
     builder.UnobservedTaskExceptionHandler = (obj, args) =>
