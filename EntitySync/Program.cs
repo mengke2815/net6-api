@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using NET6.Domain.Entities;
+using NET7.Domain.Entities;
 using SqlSugar;
 
 #region 初始化

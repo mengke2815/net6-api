@@ -12,7 +12,7 @@ https://blog.csdn.net/mengke2815
 #### 本项目框架及功能将在日后逐步升级完善，敬请期待！
 
 #### 本项目全面升级.NET7！
-[注意] 如果遇到BuilderExtensions中引用问题，请手动添加Microsoft.AspNetCore.dll引用，路径一般为：C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\7.0.0\ref\net7.0，其中版本号会随着你更新SDK而变化，需要特别注意！
+##### [注意] 如果遇到BuilderExtensions中引用问题，请手动添加Microsoft.AspNetCore.dll引用，路径一般为：C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\7.0.0\ref\net7.0，其中版本号会随着你更新SDK而变化，需要特别注意！
 
 
 #### 如果本项目对您有参考、启发或借鉴意义，可以s个tar，或者请我喝杯咖啡，您的慷慨，我的动力！
