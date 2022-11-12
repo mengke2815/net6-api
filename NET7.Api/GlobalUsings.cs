@@ -35,5 +35,6 @@ global using System.Reflection;
 global using System.Security.Claims;
 global using System.Text;
 global using System.Text.Json.Serialization;
+global using System.Threading.Channels;
 global using static NET7.Domain.ViewModels.WeChatViews;
 global using static NET7.Infrastructure.Tools.CurrentUser;
