@@ -5,9 +5,9 @@
 /// </summary>
 public class FleckServer
 {
-    private static readonly List<IWebSocketConnection> allSockets = new();
-    private static readonly WebSocketServer server = new("ws://0.0.0.0:8888");
-    private static readonly object lockobj = new();
+    static readonly List<IWebSocketConnection> allSockets = new();
+    static readonly WebSocketServer server = new("ws://0.0.0.0:8888");
+    static readonly object lockobj = new();
     public static void Start()
     {
         try

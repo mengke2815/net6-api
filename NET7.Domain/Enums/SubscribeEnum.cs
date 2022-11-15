@@ -1,7 +1,7 @@
 ﻿namespace NET7.Domain.Enums;
 
 /// <summary>
-/// 订阅事件类型
+/// 订阅事件枚举
 /// </summary>
 public enum SubscribeEnum : int
 {
