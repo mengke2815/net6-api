@@ -1,12 +1,9 @@
 ﻿namespace NET7.Domain.Enums;
 
 /// <summary>
-/// 多租户数据库枚举
+/// 多租户数据库
 /// </summary>
-public enum DBEnum : int
+public static class DBEnum
 {
-    /// <summary>
-    /// 默认数据库
-    /// </summary>
-    默认数据库 = 1
+    public const string Default = "default";
 }

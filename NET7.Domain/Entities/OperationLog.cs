@@ -5,7 +5,7 @@
 /// </summary>
 [SplitTable(SplitType.Month)]
 [SugarTable("operation_log_{year}{month}{day}")]
-[Tenant(DBEnum.默认数据库)]
+[Tenant(DBEnum.Default)]
 public class OperationLog : EntityBase
 {
     /// <summary>

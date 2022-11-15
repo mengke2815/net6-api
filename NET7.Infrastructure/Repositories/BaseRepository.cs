@@ -31,17 +31,6 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
 
     #endregion
 
-    #region 多租户
-    /// <summary>
-    /// 变更数据库
-    /// </summary>
-    /// <param name="db"></param>
-    public void ChangeDataBase(DBEnum db)
-    {
-        _sqlSugar.ChangeDatabase(db);
-    }
-    #endregion
-
     #region 原生Sql
     public virtual Task<int> ExecuteCommandAsync(string sql)
     {
@@ -127,7 +116,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
             }
             else
             {
-                _sqlSugar.ChangeDatabase(DBEnum.默认数据库);
+                _sqlSugar.ChangeDatabase(DBEnum.Default);
             }
             _sqlSugar.CodeFirst.SetStringDefaultLength(200).BackupTable().InitTables(entity);
         }

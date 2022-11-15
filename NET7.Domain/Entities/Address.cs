@@ -4,7 +4,7 @@
 /// 地址
 /// </summary>
 [SugarTable("address")]
-[Tenant(DBEnum.默认数据库)]
+[Tenant(DBEnum.Default)]
 public class Address : EntityBase
 {
     /// <summary>

@@ -26,7 +26,7 @@ builder.Services.AddSingleton(options =>
 {
     return new SqlSugarScope(new List<ConnectionConfig>()
     {
-        new ConnectionConfig() { ConfigId = DBEnum.Ä¬ÈÏÊý¾Ý¿â, ConnectionString = AppSettingsHelper.Get("SugarConnectString", true), DbType = dbtype, IsAutoCloseConnection = true }
+        new ConnectionConfig() { ConfigId = DBEnum.Default, ConnectionString = AppSettingsHelper.Get("SugarConnectString", true), DbType = dbtype, IsAutoCloseConnection = true }
     });
 });
 #endregion
