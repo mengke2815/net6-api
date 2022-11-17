@@ -312,7 +312,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     {
         entity.CreateUserId = CurrentUser.UserId;
         CommonFun.CoverNull(entity);
-        return _sqlSugarProvider.Insertable(entity).SplitTable().ExecuteCommandAsync();
+        return _sqlSugarProvider.CopyNew().Insertable(entity).SplitTable().ExecuteCommandAsync();
     }
     public virtual Task<int> AddSplitTableAsync(List<TEntity> entities)
     {

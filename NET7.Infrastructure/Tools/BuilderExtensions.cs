@@ -16,9 +16,7 @@ public static class BuilderExtensions
     {
         builder.Services.Configure<IpRateLimitOptions>(AppSettingsHelper.GetSection("IpRateLimiting"));
         builder.Services.Configure<IpRateLimitPolicies>(AppSettingsHelper.GetSection("IpRateLimitPolicies"));
-        builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-        builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-        builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+        builder.Services.AddInMemoryRateLimiting();
         builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         return builder;
     }
