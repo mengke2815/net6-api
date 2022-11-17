@@ -308,11 +308,17 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     #endregion
 
     #region 自动分表
-    public virtual Task<int> AddSplitTableAsync(TEntity entity)
+    public virtual Task<int> AddSplitTableConcurrentAsync(TEntity entity)
     {
         entity.CreateUserId = CurrentUser.UserId;
         CommonFun.CoverNull(entity);
         return _sqlSugarProvider.CopyNew().Insertable(entity).SplitTable().ExecuteCommandAsync();
+    }
+    public virtual Task<int> AddSplitTableAsync(TEntity entity)
+    {
+        entity.CreateUserId = CurrentUser.UserId;
+        CommonFun.CoverNull(entity);
+        return _sqlSugarProvider.Insertable(entity).SplitTable().ExecuteCommandAsync();
     }
     public virtual Task<int> AddSplitTableAsync(List<TEntity> entities)
     {

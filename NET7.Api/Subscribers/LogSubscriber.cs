@@ -16,6 +16,6 @@ public class LogSubscriber : IEventSubscriber
     {
         var log = context.Source.Payload.ToString().ToObject<OperationLog>();
         //分表插入日志
-        await _logRep.AddSplitTableAsync(log);
+        await _logRep.AddSplitTableConcurrentAsync(log);
     }
 }
