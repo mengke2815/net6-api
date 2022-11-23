@@ -1,4 +1,7 @@
-﻿namespace NET7.Infrastructure.Tools;
+﻿using System.Text.Encodings.Web;
+using System.Text.Unicode;
+
+namespace NET7.Infrastructure.Tools;
 
 /// <summary>
 /// 工具类
@@ -25,11 +28,17 @@ public static class CommonFun
     }
     public static string ToJson(this object obj)
     {
-        return JsonSerializer.Serialize(obj);
+        return JsonSerializer.Serialize(obj, new JsonSerializerOptions()
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+        });
     }
     public static T ToObject<T>(this string json)
     {
-        return JsonSerializer.Deserialize<T>(json);
+        return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions()
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+        });
     }
     public static object GetDefaultVal(string typename)
     {

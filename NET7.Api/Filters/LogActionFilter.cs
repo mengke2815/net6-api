@@ -28,7 +28,7 @@ public class LogActionFilter : IAsyncActionFilter
         sw.Stop();
 
         var args = context.ActionArguments.ToJson();
-        var result = actionResult?.ToJson();
+        var result = ((ObjectResult)actionResult)?.Value?.ToJson();
         var request = BuilderExtensions.ServiceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext?.Request;
         var ua = request?.Headers["User-Agent"];
         var client = UAParser.Parser.GetDefault().Parse(ua);

@@ -1,3 +1,6 @@
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
@@ -178,6 +181,7 @@ builder.Services.AddControllersWithViews(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.Converters.Add(new DatetimeJsonConverter());
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
 });
 
 var app = builder.Build();
