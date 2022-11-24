@@ -37,8 +37,8 @@ public class AuthController : BaseController
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsHelper.Get("JwtSecurityKey")));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
-            issuer: "net6api.com",
-            audience: "net6api.com",
+            issuer: "net7api.com",
+            audience: "net7api.com",
             claims: claims,
             expires: view.Expires,
             signingCredentials: creds);
@@ -77,8 +77,8 @@ public class AuthController : BaseController
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsHelper.Get("JwtSecurityKey")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
-                issuer: "net6api.com",
-                audience: "net6api.com",
+                issuer: "net7api.com",
+                audience: "net7api.com",
                 claims: jwtToken.Claims,
                 expires: view.Expires,
                 signingCredentials: creds);

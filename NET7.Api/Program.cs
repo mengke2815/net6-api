@@ -1,6 +1,3 @@
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
-
 var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
@@ -87,8 +84,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidAudience = "net6api.com",
-        ValidIssuer = "net6api.com",
+        ValidAudience = "net7api.com",
+        ValidIssuer = "net7api.com",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsHelper.Get("JwtSecurityKey"))),
         ClockSkew = TimeSpan.Zero
     };
