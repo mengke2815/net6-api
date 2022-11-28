@@ -6,13 +6,16 @@
 public class FleckServer
 {
     static readonly List<IWebSocketConnection> allSockets = new();
-    static readonly WebSocketServer server = new("ws://0.0.0.0:8888");
+    static WebSocketServer server = null;
     static readonly object lockobj = new();
-    public static void Start()
+    public static void Start(string host = "ws://0.0.0.0:8888")
     {
         try
         {
-            server.RestartAfterListenError = true;
+            server = new WebSocketServer(host)
+            {
+                RestartAfterListenError = true
+            };
             server.Start(socket =>
             {
                 socket.OnOpen = () =>
