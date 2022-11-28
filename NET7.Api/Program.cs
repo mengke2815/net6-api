@@ -99,6 +99,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
                 context.Response.Headers.Add("jwtexception", "expired");
             }
             return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            //终止默认的返回类型和数据结果
+            context.HandleResponse();
+            //自定义数据结果
+            var payload = new JsonView { Code = 401, Msg = "很抱歉，您无权访问该接口!" }.ToJson();
+            //自定义数据类型
+            context.Response.ContentType = "application/json";
+            //自定义返回状态码
+            context.Response.StatusCode = StatusCodes.Status200OK;
+            //输出Json数据结果
+            context.Response.WriteAsync(payload);
+            return Task.FromResult(0);
+        },
+        OnMessageReceived = context =>
+        {
+            //此处可以拦截Token，用于实现登出操作
+            var token = context.HttpContext.Request.Headers["Authorization"].ToString();
+            //context.HttpContext.Request.Headers["Authorization"] = "";
+            return Task.CompletedTask;
         }
     };
 });

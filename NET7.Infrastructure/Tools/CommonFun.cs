@@ -1,7 +1,4 @@
-﻿using System.Text.Encodings.Web;
-using System.Text.Unicode;
-
-namespace NET7.Infrastructure.Tools;
+﻿namespace NET7.Infrastructure.Tools;
 
 /// <summary>
 /// 工具类
