@@ -39,9 +39,14 @@ public class TimerService : BackgroundService
             throw;
         }
         #endregion
+
         //初始化socket服务器
-        FleckServer.Start();
-        Log.Error("执行完毕...");
+        new Thread(new ThreadStart(() =>
+        {
+            FleckServer.Start();
+        })).Start();
+
+        Log.Error("初始化完成...");
         return Task.CompletedTask;
     }
 }

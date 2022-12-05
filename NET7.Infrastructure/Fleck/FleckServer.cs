@@ -40,7 +40,7 @@ public class FleckServer
             Log.Error("socket启动异常：" + ex.Message);
         }
     }
-    public static string SendMessage(List<string> ListUerid, string Message)
+    public static bool SendMessage(List<string> ListUerid, string Message)
     {
         try
         {
@@ -49,15 +49,15 @@ public class FleckServer
             {
                 await s.Send(Message);
             });
-            return "ok";
+            return true;
         }
         catch (Exception ex)
         {
             Log.Error("消息发送异常：" + ex.Message);
-            return ex.Message;
+            return false;
         }
     }
-    public static string SendMessageAll(string Message)
+    public static bool SendMessageAll(string Message)
     {
         try
         {
@@ -65,12 +65,12 @@ public class FleckServer
             {
                 await s.Send(Message);
             });
-            return "ok";
+            return true;
         }
         catch (Exception ex)
         {
             Log.Error("消息发送异常：" + ex.Message);
-            return ex.Message;
+            return false;
         }
     }
 }
