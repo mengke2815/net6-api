@@ -1,22 +1,22 @@
-var builder = WebApplication.CreateBuilder(args);
+ï»¿var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
-//ÒıÈëÅäÖÃÎÄ¼ş
+//å¼•å…¥é…ç½®æ–‡ä»¶
 var _config = new ConfigurationBuilder()
                  .SetBasePath(basePath)
                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                  .Build();
 builder.Services.AddSingleton(new AppSettingsHelper(_config));
 
-#region ½Ó¿Ú·Ö×é
+#region æ¥å£åˆ†ç»„
 var groups = new List<Tuple<string, string>>
 {
-    //new Tuple<string, string>("Group1","·Ö×éÒ»"),
-    //new Tuple<string, string>("Group2","·Ö×é¶ş")
+    //new Tuple<string, string>("Group1","åˆ†ç»„ä¸€"),
+    //new Tuple<string, string>("Group2","åˆ†ç»„äºŒ")
 };
 #endregion
 
-#region ×¢ÈëÊı¾İ¿â
+#region æ³¨å…¥æ•°æ®åº“
 var dbtype = DbType.SqlServer;
 if (AppSettingsHelper.Get("SugarConnectDBType", true) == "mysql")
 {
@@ -31,11 +31,11 @@ builder.Services.AddSingleton(options =>
 });
 #endregion
 
-#region ³õÊ¼»¯Redis
+#region åˆå§‹åŒ–Redis
 RedisHelper.Initialization(new CSRedisClient(AppSettingsHelper.Get("CSRedisConnectString", true)));
 #endregion
 
-#region Ìí¼Óswagger×¢ÊÍ
+#region æ·»åŠ swaggeræ³¨é‡Š
 if (AppSettingsHelper.Get("UseSwagger").ToBool())
 {
     builder.Services.AddSwaggerGen(a =>
@@ -44,11 +44,11 @@ if (AppSettingsHelper.Get("UseSwagger").ToBool())
         {
             Version = "v1",
             Title = "Api",
-            Description = "Api½Ó¿ÚÎÄµµ"
+            Description = "Apiæ¥å£æ–‡æ¡£"
         });
         foreach (var item in groups)
         {
-            a.SwaggerDoc(item.Item1, new OpenApiInfo { Version = item.Item1, Title = item.Item2, Description = $"{item.Item2}½Ó¿ÚÎÄµµ" });
+            a.SwaggerDoc(item.Item1, new OpenApiInfo { Version = item.Item1, Title = item.Item2, Description = $"{item.Item2}æ¥å£æ–‡æ¡£" });
         }
         a.IncludeXmlComments(Path.Combine(basePath, "NET7.Api.xml"), true);
         a.IncludeXmlComments(Path.Combine(basePath, "NET7.Domain.xml"), true);
@@ -75,7 +75,7 @@ if (AppSettingsHelper.Get("UseSwagger").ToBool())
 }
 #endregion
 
-#region Ìí¼ÓÉí·İÑéÖ¤
+#region æ·»åŠ èº«ä»½éªŒè¯
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -89,7 +89,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsHelper.Get("JwtSecurityKey"))),
         ClockSkew = TimeSpan.Zero
     };
-    //¼àÌıJWT¹ıÆÚÊÂ¼ş
+    //ç›‘å¬JWTè¿‡æœŸäº‹ä»¶
     options.Events = new JwtBearerEvents
     {
         OnAuthenticationFailed = context =>
@@ -102,21 +102,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         },
         OnChallenge = context =>
         {
-            //ÖÕÖ¹Ä¬ÈÏµÄ·µ»ØÀàĞÍºÍÊı¾İ½á¹û
+            //ç»ˆæ­¢é»˜è®¤çš„è¿”å›ç±»å‹å’Œæ•°æ®ç»“æœ
             context.HandleResponse();
-            //×Ô¶¨ÒåÊı¾İ½á¹û
-            var payload = new JsonView { Code = 401, Msg = "ºÜ±§Ç¸£¬ÄúÎŞÈ¨·ÃÎÊ¸Ã½Ó¿Ú!" }.ToJson();
-            //×Ô¶¨ÒåÊı¾İÀàĞÍ
+            //è‡ªå®šä¹‰æ•°æ®ç»“æœ
+            var payload = new JsonView { Code = 401, Msg = "å¾ˆæŠ±æ­‰ï¼Œæ‚¨æ— æƒè®¿é—®è¯¥æ¥å£!" }.ToJson();
+            //è‡ªå®šä¹‰æ•°æ®ç±»å‹
             context.Response.ContentType = "application/json";
-            //×Ô¶¨Òå·µ»Ø×´Ì¬Âë
+            //è‡ªå®šä¹‰è¿”å›çŠ¶æ€ç 
             context.Response.StatusCode = StatusCodes.Status200OK;
-            //Êä³öJsonÊı¾İ½á¹û
+            //è¾“å‡ºJsonæ•°æ®ç»“æœ
             context.Response.WriteAsync(payload);
             return Task.FromResult(0);
         },
         OnMessageReceived = context =>
         {
-            //´Ë´¦¿ÉÒÔÀ¹½ØToken£¬ÓÃÓÚÊµÏÖµÇ³ö²Ù×÷
+            //æ­¤å¤„å¯ä»¥æ‹¦æˆªTokenï¼Œç”¨äºå®ç°ç™»å‡ºæ“ä½œ
             var token = context.HttpContext.Request.Headers["Authorization"].ToString();
             //context.HttpContext.Request.Headers["Authorization"] = "";
             return Task.CompletedTask;
@@ -125,7 +125,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 #endregion
 
-#region ³õÊ¼»¯ÈÕÖ¾
+#region åˆå§‹åŒ–æ—¥å¿—
 builder.Host.UseSerilog((builderContext, config) =>
 {
     config
@@ -136,12 +136,12 @@ builder.Host.UseSerilog((builderContext, config) =>
 });
 #endregion
 
-#region ÔÊĞí·şÎñÆ÷Í¬²½IO
+#region å…è®¸æœåŠ¡å™¨åŒæ­¥IO
 builder.Services.Configure<KestrelServerOptions>(a => a.AllowSynchronousIO = true)
                 .Configure<IISServerOptions>(a => a.AllowSynchronousIO = true);
 #endregion
 
-#region ³õÊ¼»¯Autofac ×¢Èë³ÌĞò¼¯
+#region åˆå§‹åŒ–Autofac æ³¨å…¥ç¨‹åºé›†
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
@@ -150,16 +150,16 @@ var hostBuilder = builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 });
 #endregion
 
-#region ³õÊ¼»¯AutoMapper ×Ô¶¯Ó³Éä
+#region åˆå§‹åŒ–AutoMapper è‡ªåŠ¨æ˜ å°„
 var serviceAssembly = Assembly.Load("NET7.Domain");
 builder.Services.AddAutoMapper(serviceAssembly);
 #endregion
 
-#region ×¢ÈëºóÌ¨·şÎñ
+#region æ³¨å…¥åå°æœåŠ¡
 builder.Services.AddHostedService<TimerService>();
 #endregion
 
-#region ×¢ÈëÊÂ¼ş×ÜÏß
+#region æ³¨å…¥äº‹ä»¶æ€»çº¿
 builder.Services.AddEventBus(builder =>
 {
     builder.ChannelCapacity = 5000;
@@ -168,7 +168,7 @@ builder.Services.AddEventBus(builder =>
     builder.AddSubscriber<OrderSubscriber>();
     builder.UnobservedTaskExceptionHandler = (obj, args) =>
     {
-        Log.Error($"ÊÂ¼ş×ÜÏßÒì³££º{args.Exception}");
+        Log.Error($"äº‹ä»¶æ€»çº¿å¼‚å¸¸ï¼š{args.Exception}");
     };
     //builder.ReplaceStorer(serviceProvider =>
     //{
@@ -177,15 +177,15 @@ builder.Services.AddEventBus(builder =>
 });
 #endregion
 
-#region ×¢ÈëÏµÍ³»º´æ
+#region æ³¨å…¥ç³»ç»Ÿç¼“å­˜
 builder.Services.AddMemoryCache();
 #endregion
 
-#region ×¢ÈëhttpÉÏÏÂÎÄ
+#region æ³¨å…¥httpä¸Šä¸‹æ–‡
 builder.AddServiceProvider();
 #endregion
 
-#region ×¢ÈëÏŞÁ÷ÅäÖÃ
+#region æ³¨å…¥é™æµé…ç½®
 builder.AddRateLimit();
 #endregion
 
@@ -206,11 +206,11 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-#region ÆôÓÃ¾²Ì¬×ÊÔ´·ÃÎÊ
-//´´½¨Ä¿Â¼
+#region å¯ç”¨é™æ€èµ„æºè®¿é—®
+//åˆ›å»ºç›®å½•
 var path = Path.Combine(basePath, "Files/");
 CommonFun.CreateDir(path);
-//Ìí¼ÓMIMEÖ§³Ö
+//æ·»åŠ MIMEæ”¯æŒ
 var provider = new FileExtensionContentTypeProvider();
 provider.Mappings.Add(".fbx", "application/octet-stream");
 provider.Mappings.Add(".obj", "application/octet-stream");
@@ -223,7 +223,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 #endregion
 
-#region ÆôÓÃ¿çÓò·ÃÎÊ
+#region å¯ç”¨è·¨åŸŸè®¿é—®
 app.UseCors(builder => builder
    .WithOrigins(AppSettingsHelper.Get("Origins"))
    .AllowCredentials()
@@ -237,7 +237,7 @@ app.UseAuthorization();
 
 app.UseIpRateLimiting();
 
-#region ÆôÓÃswaggerUI
+#region å¯ç”¨swaggerUI
 if (AppSettingsHelper.Get("UseSwagger").ToBool())
 {
     app.UseSwagger();
@@ -250,7 +250,7 @@ if (AppSettingsHelper.Get("UseSwagger").ToBool())
         }
         a.RoutePrefix = string.Empty;
         a.DocExpansion(DocExpansion.None);
-        a.DefaultModelsExpandDepth(-1);//²»ÏÔÊ¾Models
+        a.DefaultModelsExpandDepth(-1);//ä¸æ˜¾ç¤ºModels
     });
 }
 #endregion
