@@ -75,15 +75,15 @@ public class AddressController : BaseController
         {
             var _model = _mapper.Map<Address>(dto);
             //开启事务
-            _addressRep.BeginTran();
+            await _addressRep.BeginTranAsync();
             var result = await _addressRep.AddAsync(_model);
-            _addressRep.CommitTran();
+            await _addressRep.CommitTranAsync();
             if (result > 0) return JsonView(true);
             return JsonView(false);
         }
         catch (Exception e)
         {
-            _addressRep.RollbackTran();
+            await _addressRep.RollbackTranAsync();
             Logs("添加异常：" + e.Message);
             return JsonView("添加异常");
         }
@@ -102,7 +102,7 @@ public class AddressController : BaseController
         try
         {
             //开启事务
-            _addressRep.BeginTran();
+            await _addressRep.BeginTranAsync();
             var result = await _addressRep.UpdateAsync(a => a.Id == id, a => new Address
             {
                 Name = dto.Name,
@@ -113,13 +113,13 @@ public class AddressController : BaseController
                 Detail = dto.Detail,
                 IsDefault = dto.IsDefault
             });
-            _addressRep.CommitTran();
+            await _addressRep.CommitTranAsync();
             if (result > 0) return JsonView(true);
             return JsonView(false);
         }
         catch (Exception e)
         {
-            _addressRep.RollbackTran();
+            await _addressRep.RollbackTranAsync();
             Logs("修改异常：" + e.Message);
             return JsonView("修改异常");
         }
@@ -137,15 +137,15 @@ public class AddressController : BaseController
         try
         {
             //开启事务操作资源
-            _addressRep.BeginTran();
+            await _addressRep.BeginTranAsync();
             var result = await _addressRep.SoftDeleteAsync(a => a.Id == id);
-            _addressRep.CommitTran();
+            await _addressRep.CommitTranAsync();
             if (result > 0) return JsonView(true);
             return JsonView(false);
         }
         catch (Exception e)
         {
-            _addressRep.RollbackTran();
+            await _addressRep.RollbackTranAsync();
             Logs("删除异常：" + e.Message);
             return JsonView("删除异常");
         }

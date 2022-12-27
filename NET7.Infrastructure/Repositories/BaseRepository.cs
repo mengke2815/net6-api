@@ -15,18 +15,23 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         _sqlSugarProvider = sqlSugar.GetConnectionScopeWithAttr<TEntity>();
     }
 
+    public SqlSugarClient CopyNew()
+    {
+        return _sqlSugar.CopyNew();
+    }
+
     #region 事务操作
-    public void BeginTran()
+    public Task BeginTranAsync()
     {
-        _sqlSugar.BeginTran();
+        return _sqlSugar.BeginTranAsync();
     }
-    public void CommitTran()
+    public Task CommitTranAsync()
     {
-        _sqlSugar.CommitTran();
+        return _sqlSugar.CommitTranAsync();
     }
-    public void RollbackTran()
+    public Task RollbackTranAsync()
     {
-        _sqlSugar.RollbackTran();
+        return _sqlSugar.RollbackTranAsync();
     }
 
     #endregion

@@ -25,23 +25,4 @@ public class RedisEventSourceStorer : IEventSourceStorer
     {
         return await _channel.Reader.ReadAsync(cancellationToken);
     }
-
-    #region redis实现
-    //static readonly SemaphoreSlim _semaphore = new(0);
-    //public async ValueTask WriteAsync(IEventSource eventSource, CancellationToken cancellationToken)
-    //{
-    //    await RedisHelper.LPushAsync("MyEventBus", eventSource);
-    //    _semaphore.Release();
-    //}
-    //public async ValueTask<IEventSource> ReadAsync(CancellationToken cancellationToken)
-    //{
-    //    await _semaphore.WaitAsync(cancellationToken);
-    //    return await RedisHelper.RPopAsync<ChannelEventSource>("MyEventBus");
-    //}
-    //public void Dispose()
-    //{
-    //    _semaphore.Release(int.MaxValue);
-    //    _semaphore.Dispose();
-    //} 
-    #endregion
 }
