@@ -15,7 +15,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         _sqlSugarProvider = sqlSugar.GetConnectionScopeWithAttr<TEntity>();
     }
 
-    public SqlSugarClient CopyNew()
+    public SqlSugarClient CopyDB()
     {
         return _sqlSugar.CopyNew();
     }
@@ -25,7 +25,7 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
     /// </summary>
     /// <param name="configId"></param>
     /// <returns></returns>
-    public SqlSugarScopeProvider GetConnection(object configId)
+    public SqlSugarScopeProvider GetDB(object configId)
     {
         return _sqlSugar.GetConnectionScope(configId);
     }
