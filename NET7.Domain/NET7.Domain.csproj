@@ -22,11 +22,11 @@
     <PackageReference Include="CSRedisCore" Version="3.8.670" />
     <PackageReference Include="Jaina" Version="4.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.67" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.73" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="UAParser" Version="3.1.47" />
-    <PackageReference Include="EPPlus" Version="6.2.2" />
+    <PackageReference Include="EPPlus" Version="6.2.4" />
     <PackageReference Include="Fleck" Version="1.2.0" />
 	</ItemGroup>
 

@@ -20,6 +20,16 @@ public class BaseRepository<TEntity, TDto> where TEntity : EntityBase, new()
         return _sqlSugar.CopyNew();
     }
 
+    /// <summary>
+    /// 获取新实例
+    /// </summary>
+    /// <param name="configId"></param>
+    /// <returns></returns>
+    public SqlSugarScopeProvider GetConnection(object configId)
+    {
+        return _sqlSugar.GetConnectionScope(configId);
+    }
+
     #region 事务操作
     public Task BeginTranAsync()
     {
