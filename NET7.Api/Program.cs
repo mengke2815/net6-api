@@ -1,7 +1,4 @@
-﻿using Serilog.Events;
-using System.Runtime.Serialization;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
 //引入配置文件

@@ -28,4 +28,3 @@ global using System.Text.Json.Serialization;
 global using System.Text.RegularExpressions;
 global using System.Text.Unicode;
 global using System.Xml.Linq;
-global using static NET7.Domain.ViewModels.WeChatViews;

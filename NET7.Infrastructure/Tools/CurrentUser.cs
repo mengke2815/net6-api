@@ -30,16 +30,15 @@ public class CurrentUser
             return string.Empty;
         }
     }
-
-    public static class ClaimAttributes
-    {
-        /// <summary>
-        /// 用户Id
-        /// </summary>
-        public const string UserId = "current_UserId";
-        /// <summary>
-        /// 用户名
-        /// </summary>
-        public const string UserName = "current_UserName";
-    }
+}
+public class ClaimAttributes
+{
+    /// <summary>
+    /// 用户Id
+    /// </summary>
+    public const string UserId = "current_UserId";
+    /// <summary>
+    /// 用户名
+    /// </summary>
+    public const string UserName = "current_UserName";
 }
