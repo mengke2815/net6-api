@@ -1,4 +1,7 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Serilog.Events;
+using System.Runtime.Serialization;
+
+var builder = WebApplication.CreateBuilder(args);
 var basePath = AppContext.BaseDirectory;
 
 //引入配置文件
@@ -129,10 +132,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Host.UseSerilog((builderContext, config) =>
 {
     config
-    .MinimumLevel.Warning()
+    .MinimumLevel.Verbose()
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.File(Path.Combine("Logs", @"Log.txt"), rollingInterval: RollingInterval.Day);
+    .WriteTo.Logger(a => a.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Debug).WriteTo.File(Path.Combine("Logs", AppSettingsHelper.Get("Serilog:DebugFileName")), rollingInterval: RollingInterval.Day))
+    .WriteTo.Logger(a => a.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information).WriteTo.File(Path.Combine("Logs", AppSettingsHelper.Get("Serilog:InformationFileName")), rollingInterval: RollingInterval.Day))
+    .WriteTo.Logger(a => a.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Warning).WriteTo.File(Path.Combine("Logs", AppSettingsHelper.Get("Serilog:WarningFileName")), rollingInterval: RollingInterval.Day))
+    .WriteTo.Logger(a => a.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error).WriteTo.File(Path.Combine("Logs", AppSettingsHelper.Get("Serilog:ErrorFileName")), rollingInterval: RollingInterval.Day))
+    .WriteTo.Logger(a => a.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Fatal).WriteTo.File(Path.Combine("Logs", AppSettingsHelper.Get("Serilog:FatalFileName")), rollingInterval: RollingInterval.Day));
+    //.WriteTo.File(Path.Combine("Logs", @"Log.txt"), rollingInterval: RollingInterval.Day);
 });
 #endregion
 
