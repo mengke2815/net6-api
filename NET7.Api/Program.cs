@@ -130,6 +130,7 @@ builder.Host.UseSerilog((builderContext, config) =>
 {
     config
     .MinimumLevel.Verbose()
+    //.MinimumLevel.Warning()
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.Logger(a => a.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Debug).WriteTo.File(Path.Combine("Logs", AppSettingsHelper.Get("Serilog:DebugFileName")), rollingInterval: RollingInterval.Day))
