@@ -19,14 +19,14 @@
     <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="CSRedisCore" Version="3.8.670" />
+    <PackageReference Include="CSRedisCore" Version="3.8.671" />
     <PackageReference Include="Jaina" Version="4.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
     <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.104" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.106" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="UAParser" Version="3.1.47" />
-    <PackageReference Include="EPPlus" Version="6.2.8" />
+    <PackageReference Include="EPPlus" Version="6.2.9" />
     <PackageReference Include="Fleck" Version="1.2.0" />
 	</ItemGroup>
 
