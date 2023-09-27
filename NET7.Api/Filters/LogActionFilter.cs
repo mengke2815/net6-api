@@ -49,28 +49,6 @@ public class LogActionFilter : IAsyncActionFilter
             IP = CommonFun.GetIP(request)
         };
 
-        //解析xml注释
-        var route = ((ControllerActionDescriptor)context.ActionDescriptor).AttributeRouteInfo.Template;
-        var method = context.HttpContext.Request.Method.ToLower();
-        var cName = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerTypeInfo.FullName;
-        var mName = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
-        var xml = BuilderExtensions.ServiceProvider.GetRequiredService<XElement>();
-        var members = xml.Elements().FirstOrDefault(a => a.Name == "members").Elements();
-        var param = ((ControllerActionDescriptor)context.ActionDescriptor).Parameters;
-        var paramList = new List<string>();
-        foreach (var item in param)
-        {
-            paramList.Add(item.ParameterType.FullName);
-        }
-        var pms = "";
-        if (paramList.Count > 0)
-        {
-            pms = $"({string.Join(',', paramList)})";
-        }
-        var cDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"T:{cName}").Elements().FirstOrDefault(a => a.Name == "summary").Value.Trim();
-        var mDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"M:{cName}.{mName}Async{pms}").Elements().FirstOrDefault(a => a.Name == "summary").Value.Trim();
-
-
         //推入消息总线
         await _eventPublisher.PublishAsync(SubscribeEnum.审计日志, log.ToJson());
     }
