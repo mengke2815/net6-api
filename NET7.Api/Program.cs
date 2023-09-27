@@ -75,6 +75,10 @@ if (AppSettingsHelper.Get("UseSwagger").ToBool())
 }
 #endregion
 
+#region 注入xml注释
+builder.Services.AddSingleton(XElement.Parse(File.ReadAllText(Path.Combine(basePath, "NET7.Api.xml"))));
+#endregion
+
 #region 添加身份验证
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
