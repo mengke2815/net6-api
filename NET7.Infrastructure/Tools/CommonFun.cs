@@ -170,13 +170,13 @@ public static class CommonFun
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    public static List<string> ParseXml(this ActionExecutingContext context)
+    public static List<string> ParseXml(this ActionExecutingContext context, string xmlName)
     {
+        var xml = XElement.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, xmlName)));
         var route = ((ControllerActionDescriptor)context.ActionDescriptor).AttributeRouteInfo.Template;
         var method = context.HttpContext.Request.Method.ToLower();
         var cName = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerTypeInfo.FullName;
         var mName = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
-        var xml = BuilderExtensions.ServiceProvider.GetRequiredService<XElement>();
         var members = xml.Elements().FirstOrDefault(a => a.Name == "members").Elements();
         var param = ((ControllerActionDescriptor)context.ActionDescriptor).Parameters;
         var paramList = new List<string>();
