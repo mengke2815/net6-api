@@ -168,9 +168,13 @@ public static class CommonFun
     }
     #endregion
 
+    /// <summary>
+    /// 解析xml注释
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
     public static List<string> ParseXml(this ActionExecutingContext context)
     {
-        //解析xml注释
         var route = ((ControllerActionDescriptor)context.ActionDescriptor).AttributeRouteInfo.Template;
         var method = context.HttpContext.Request.Method.ToLower();
         var cName = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerTypeInfo.FullName;
