@@ -50,6 +50,7 @@ public class LogActionFilter : IAsyncActionFilter
         };
 
         //解析xml注释
+        var route = ((ControllerActionDescriptor)context.ActionDescriptor).AttributeRouteInfo.Template;
         var cName = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerTypeInfo.FullName;
         var mName = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
         var xml = BuilderExtensions.ServiceProvider.GetRequiredService<XElement>();
@@ -60,13 +61,13 @@ public class LogActionFilter : IAsyncActionFilter
         {
             paramList.Add(item.ParameterType.FullName);
         }
-        var pm = "";
+        var pms = "";
         if (paramList.Count > 0)
         {
-            pm = $"({string.Join(',', paramList)})";
+            pms = $"({string.Join(',', paramList)})";
         }
         var cDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"T:{cName}").Elements().FirstOrDefault(a => a.Name == "summary").Value.Trim();
-        var mDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"M:{cName}.{mName}Async{pm}").Elements().FirstOrDefault(a => a.Name == "summary").Value.Trim();
+        var mDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"M:{cName}.{mName}Async{pms}").Elements().FirstOrDefault(a => a.Name == "summary").Value.Trim();
 
 
         //推入消息总线
