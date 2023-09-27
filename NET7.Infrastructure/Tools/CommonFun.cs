@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace NET7.Infrastructure.Tools;
+﻿namespace NET7.Infrastructure.Tools;
 
 /// <summary>
 /// 工具类
