@@ -51,6 +51,7 @@ public class LogActionFilter : IAsyncActionFilter
 
         //解析xml注释
         var route = ((ControllerActionDescriptor)context.ActionDescriptor).AttributeRouteInfo.Template;
+        var method = context.HttpContext.Request.Method.ToLower();
         var cName = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerTypeInfo.FullName;
         var mName = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
         var xml = BuilderExtensions.ServiceProvider.GetRequiredService<XElement>();
