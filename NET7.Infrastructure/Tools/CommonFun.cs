@@ -170,40 +170,45 @@ public static class CommonFun
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    public static List<string> ParseXml(this ActionExecutingContext context, string xmlName)
+    public static List<string> ParseXml(this ActionExecutingContext context, string xmlName = "")
     {
-        var xml = XElement.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, xmlName)));
-        var route = ((ControllerActionDescriptor)context.ActionDescriptor).AttributeRouteInfo.Template;
-        var method = context.HttpContext.Request.Method.ToLower();
-        var cName = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerTypeInfo.FullName;
-        var mName = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
-        var members = xml.Elements().FirstOrDefault(a => a.Name == "members").Elements();
-        var param = ((ControllerActionDescriptor)context.ActionDescriptor).Parameters;
-        var paramList = new List<string>();
-        foreach (var item in param)
+        var list = new List<string>();
+        if (xmlName.IsNull())
         {
-            paramList.Add(item.ParameterType.FullName);
+            xmlName = Assembly.GetEntryAssembly().GetName().Name + ".xml";
         }
-        var pms = "";
-        if (paramList.Count > 0)
+        if (File.Exists(Path.Combine(AppContext.BaseDirectory, xmlName)))
         {
-            pms = $"({string.Join(',', paramList)})";
+            var xml = XElement.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, xmlName)));
+            var route = ((ControllerActionDescriptor)context.ActionDescriptor).AttributeRouteInfo.Template.ToLower();
+            var method = context.HttpContext.Request.Method.ToLower();
+            var cName = ((ControllerActionDescriptor)context.ActionDescriptor).ControllerTypeInfo.FullName;
+            var mName = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
+            var members = xml.Elements().FirstOrDefault(a => a.Name == "members").Elements();
+            var param = ((ControllerActionDescriptor)context.ActionDescriptor).Parameters;
+            var paramList = new List<string>();
+            foreach (var item in param)
+            {
+                paramList.Add(item.ParameterType.FullName);
+            }
+            var pms = "";
+            if (paramList.Count > 0)
+            {
+                pms = $"({string.Join(',', paramList)})";
+            }
+            var cDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"T:{cName}")?.Elements().FirstOrDefault(a => a.Name == "summary")?.Value.Trim();
+            var mDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"M:{cName}.{mName}Async{pms}")?.Elements().FirstOrDefault(a => a.Name == "summary")?.Value.Trim();
+            if (mDesc.IsNull())
+            {
+                mDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"M:{cName}.{mName}{pms}")?.Elements().FirstOrDefault(a => a.Name == "summary")?.Value.Trim();
+            }
+            list.Add(route);
+            list.Add(method);
+            list.Add(cName);
+            list.Add(mName);
+            list.Add(cDesc);
+            list.Add(mDesc);
         }
-        var cDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"T:{cName}")?.Elements().FirstOrDefault(a => a.Name == "summary")?.Value.Trim();
-        var mDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"M:{cName}.{mName}Async{pms}")?.Elements().FirstOrDefault(a => a.Name == "summary")?.Value.Trim();
-        if (mDesc.IsNull())
-        {
-            mDesc = members.FirstOrDefault(a => a.FirstAttribute.Value == $"M:{cName}.{mName}{pms}")?.Elements().FirstOrDefault(a => a.Name == "summary")?.Value.Trim();
-        }
-        var list = new List<string>
-        {
-            route,
-            method,
-            cName,
-            mName,
-            cDesc,
-            mDesc
-        };
         return list;
     }
 }
