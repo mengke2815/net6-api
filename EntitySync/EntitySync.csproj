@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NET7.Domain\NET7.Domain.csproj" />
+    <ProjectReference Include="..\NET.Domain\NET.Domain.csproj" />
   </ItemGroup>
 
 </Project>

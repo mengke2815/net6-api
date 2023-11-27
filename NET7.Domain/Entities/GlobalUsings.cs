@@ -1,9 +1,0 @@
-﻿global using AutoMapper;
-global using NET7.Domain.Dtos;
-global using NET7.Domain.Entities;
-global using NET7.Domain.Enums;
-global using NET7.Domain.ViewModels;
-global using SqlSugar;
-global using System.Security.Cryptography;
-global using System.Text;
-global using System.Xml;
